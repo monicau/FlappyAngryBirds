@@ -1,0 +1,24 @@
+<script src="/socket.io/socket.io.js"></script>
+
+<input id="room name" type="text" name="room" value="Room name"><br>
+<button onclick='create()'>create</button>
+<button onclick='join()'>enter</button>
+<script>
+	function join(){
+		console.log('joining room');
+		socket.emit('join room', { room:document.getElementById('room name').value });
+	}
+	
+	var socket = io();
+	var roomMembers = [];
+	socket.on('new comer', function(content){
+		console.log(content.id+' has entered room');
+		roomMembers.push(content.id);
+	});
+	socket.on('room members', function(message){
+		console.log(message);
+	});
+	
+	
+
+</script>

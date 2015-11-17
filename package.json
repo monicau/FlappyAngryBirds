@@ -1,0 +1,10 @@
+{
+  "name": "Super flappy bricks bros",
+  "version": "0.0.1",
+  "description": "Flappy bricks",
+
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  }
+}
