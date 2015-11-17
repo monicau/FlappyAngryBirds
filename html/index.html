@@ -1,24 +1,97 @@
-<script src="/socket.io/socket.io.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Super flappy bricks bros</title>
 
-<input id="room name" type="text" name="room" value="Room name"><br>
-<button onclick='create()'>create</button>
-<button onclick='join()'>enter</button>
-<script>
-	function join(){
-		console.log('joining room');
-		socket.emit('join room', { room:document.getElementById('room name').value });
-	}
-	
-	var socket = io();
-	var roomMembers = [];
-	socket.on('new comer', function(content){
-		console.log(content.id+' has entered room');
-		roomMembers.push(content.id);
-	});
-	socket.on('room members', function(message){
-		console.log(message);
-	});
-	
-	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
 
-</script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+    	$(document).ready(function() {
+    		// Hide game room div at the start
+			$("#div-room").hide();
+    	});
+		function join(){
+			console.log('joining room');
+			socket.emit('join room', { room:document.getElementById('room name').value });
+			$("#div-join").hide();
+			$("#div-lobby").hide();
+			$("#div-room").show();
+		}
+		function start() {
+			socket.emit('start game');
+		}
+		var socket = io();
+		var roomMembers = [];
+		socket.on('new comer', function(content){
+			console.log(content.id+' has entered room');
+			$('#lobby-messages').append($('<li>').text(content.id+' has entered the lobby'));
+			
+		});
+		socket.on('new member', function(content) {
+			$('#room-messages').append($('<li>').text(content.id+' has entered the room'));
+			roomMembers.push(content.id);
+		});
+
+		socket.on('room members', function(message){
+			console.log(message);
+			$('#room-members').text(message);
+		});
+
+		socket.on('lobby members', function(message){
+			console.log(message);
+			$('#lobby-members').text(message.members);
+		});
+
+		socket.on('disconnected', function(messages){
+			console.log('DISCONNECTED ');
+			$('#lobby-messages').text(messages.id + " disconnected");
+		});
+
+	</script>
+  </head>
+  <body>
+  	<div id="div-join" style="width:500px; margin:auto; padding:50px 0;">
+  		<h1>Create or join a room</h1>
+	  	<input class="form-control" style="width:100%" id="room name" type="text" name="room" value="Room name"><br>
+		<button class="btn btn-primary" onclick='create()'>create</button>
+		<button class="btn btn-primary" onclick='join()'>enter</button>
+	</div>
+	<div id="div-lobby" style="width:500px; margin:auto; padding:50px 0;">
+		<h2>Lobby</h2>
+		<div class="well">
+			<h4>Current members</h4>
+			<div id="lobby-members"></div>
+			<hr>
+			<h4>Log</h4>
+			<ul id="lobby-messages"></ul>
+		</div>
+	</div>
+	<div id="div-room" style="width:500px; margin:auto; padding:50px 0;">
+		<h1>Game room</h1>
+		<div class="well">
+			<h4>Current members</h4>
+			<div id="room-members"></div>
+			<hr>
+			<h4>Log</h4>
+			<ul id="room-messages"></ul>
+		</div>
+		<button class="btn btn-success" onclick='start()'>start game</button>
+	</div>
+  </body>
+</html>
+
+
