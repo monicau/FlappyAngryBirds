@@ -9,8 +9,9 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+	  <link rel="stylesheet" href="/css/styles.css">
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 	<script src="/socket.io/socket.io.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -64,13 +65,17 @@
 	</script>
   </head>
   <body>
-  	<div id="div-join" style="width:500px; margin:auto; padding:50px 0;">
+  <div class="jumbotron">
+	  <h1>Welcome to our Flappy Bird game!</h1>
+	  <p>Here is some placeholder text informing the user about what to do.</p>
+  </div>
+  	<div id="div-join">
   		<h1>Create or join a room</h1>
-	  	<input class="form-control" style="width:100%" id="room name" type="text" name="room" value="Room name"><br>
-		<button class="btn btn-primary" onclick='create()'>create</button>
-		<button class="btn btn-primary" onclick='join()'>enter</button>
+	  	<input class="form-control" id="room name" type="text" name="room" placeholder="Room name"><br>
+		<button class="btn btn-primary" onclick='create()'>Create</button>
+		<button class="btn btn-primary" onclick='join()'>Enter</button>
 	</div>
-	<div id="div-lobby" style="width:500px; margin:auto; padding:50px 0;">
+	<div id="div-lobby">
 		<h2>Lobby</h2>
 		<div class="well">
 			<h4>Current members</h4>
@@ -80,7 +85,7 @@
 			<ul id="lobby-messages"></ul>
 		</div>
 	</div>
-	<div id="div-room" style="width:500px; margin:auto; padding:50px 0;">
+	<div id="div-room">
 		<h1>Game room</h1>
 		<div class="well">
 			<h4>Current members</h4>

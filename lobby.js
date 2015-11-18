@@ -1,7 +1,8 @@
 var util = require('util');
 var fs = require('fs');
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -11,6 +12,8 @@ var port = 8080;
 http.listen(port, function(){
   console.log('listening on *:'+port);
 });
+
+app.use("/css", express.static(__dirname + '/css'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname+'/html/index.html');
