@@ -12,9 +12,10 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 	<link rel="stylesheet" href="/css/styles.css">
 	<script type="text/javascript" src="js/phaser.min.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/game.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,76 +23,6 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script>
-    	$(document).ready(function() {
-    		// Hide game room div at the start
-			$("#game").hide();
-			$("#div-room").hide();
-    	});
-		function join(){
-			console.log('joining room');
-			socket.emit('join room', { room:document.getElementById('room name').value });
-			$("#div-join").hide();
-			$("#div-lobby").hide();
-			$("#div-room").show();
-		}
-		function start() {
-			socket.emit('start game');
-			$("#game").show();
-		}
-		var socket = io();
-		var roomMembers = [];
-		socket.on('new comer', function(content){
-			console.log(content.id+' has entered room');
-			$('#lobby-messages').append($('<li>').text(content.id+' has entered the lobby'));
-			
-		});
-		socket.on('new member', function(content) {
-			$('#room-messages').append($('<li>').text(content.id+' has entered the room'));
-			roomMembers.push(content.id);
-		});
-
-		socket.on('room members', function(message){
-			console.log(message);
-			$('#room-members').text(message);
-		});
-
-		socket.on('lobby members', function(message){
-			console.log(message);
-			$('#lobby-members').text(message.members);
-		});
-
-		socket.on('disconnected', function(messages){
-			console.log('DISCONNECTED ');
-			$('#lobby-messages').text(messages.id + " disconnected");
-		});
-		var socketGame;
-		socket.on('gamePort', function(portNum) {
-			console.log("Trying to connect to game port: " + portNum);
-			socketGame = io.connect('http://localhost:' + portNum);
-			
-			socketGame.on('message', function(message) {
-				console.log("Message from game.js: " + message);
-				isBoss = message.youRBoss;
-			});
-
-			socketGame.on('update', function(message){
-				// update the game state
-			});
-
-			socketGame.on('start', function(message){
-				if(isBoss){
-
-				}
-				else{
-
-				}
-
-			});
-		});
-		
-
-	</script>
   </head>
   <body>
   <div class="jumbotron">

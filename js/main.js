@@ -1,138 +1,76 @@
-// http://blog.lessmilk.com/how-to-make-flappy-bird-in-html5-1/
-// Create new game
-var game = new Phaser.Game(500, 500, Phaser.AUTO, 'game');
-var isBoss = false;
+$(document).ready(function() {
+	// Hide game room div at the start
+	$("#game").hide();
+	$("#div-room").hide();
+});
+function join(){
+	console.log('joining room');
+	socket.emit('join room', { room:document.getElementById('room name').value });
+	$("#div-join").hide();
+	$("#div-lobby").hide();
+	$("#div-room").show();
+}
+function start() {
+	socket.emit('ready game');
+	$("#game").show();
+}
+var socket = io();
+var roomMembers = [];
+socket.on('new comer', function(content){
+	console.log(content.id+' has entered room');
+	$('#lobby-messages').append($('<li>').text(content.id+' has entered the lobby'));
+	
+});
+socket.on('new member', function(content) {
+	$('#room-messages').append($('<li>').text(content.id+' has entered the room'));
+	roomMembers.push(content.id);
+});
 
-// Create main state
-var mainState = {
-	preload: function() {
-		// Set background
-		game.stage.backgroundColor = '#71c5cf';
-		
-		// Load game assets
-		game.load.image('bird', 'assets/bird.png');
-		game.load.image('pipe', 'assets/pipe.png');
-		game.load.audio('jump', 'assets/jump.wav');
-	},
+socket.on('room members', function(message){
+	console.log(message);
+	$('#room-members').text(message);
+});
 
-	create: function() {
-		// Set up the physics system
-		game.physics.startSystem(Phaser.Physics.ARCADE);
+socket.on('lobby members', function(message){
+	console.log(message);
+	$('#lobby-members').text(message.members);
+});
 
-		// Display bird
-		this.bird = this.game.add.sprite(100, 245, 'bird');
+socket.on('disconnected', function(messages){
+	console.log('DISCONNECTED ');
+	$('#lobby-messages').text(messages.id + " disconnected");
+});
 
-		// Add gravity to bird
-		game.physics.arcade.enable(this.bird);
-		this.bird.body.gravity.y = 1000;
+function birdUpdates(state){
 
-		// Set anchor so that its animation rotates how we want
-		this.bird.anchor.setTo(-0.2, 0.5);
+}
 
-		// Key binding for jumping
-		var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		spaceKey.onDown.add(this.jump, this);
+var socketGame;
+socket.on('gamePort', function(portNum) {
+	console.log("Trying to connect to game port: " + portNum);
+	socketGame = io.connect('http://localhost:' + portNum);
+	
+	socketGame.on('message', function(message) {
+		console.log("Message from game.js: " + message);
+		isBoss = message.youRBoss;
+	});
 
-		// Bind jumping sound to a variable
-		this.jumpSound = game.add.audio('jump');
+	socketGame.on('update', function(message){
+		// update the game state
+	});
 
-		// Create a group of pipes, add physics
-		this.pipes = this.game.add.group();
-		this.pipes.enableBody = true;
-		this.pipes.createMultiple(20, 'pipe');
-
-		// Create a timer for the pipes
-		this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
-
-		// score
-		this.score = 0;
-		this.labelScore = game.add.text(20,20,"0", {font:"30px Arial", fill:"#ffffff"});
-
-		if (isBoss) {
-			// Do collision detection
-
-			
-		}
-	},
-
-	update: function() {
-		// This gets called 60 times per second
-
-
-		// Rotate bird over time
-		if (this.bird.angle < 20) {
-			this.bird.angle += 1;
-		}
-
-		// Restart game if bird falls out of the screen
-		if (this.bird.inWorld == false) this.restartGame();
-
-		// Restart game if bird hits pipe
-		game.physics.arcade.overlap(this.bird, this.pipes, this.hitPipe, null, this);
-	},
-
-	jump: function() {
-		if (this.bird.alive == false) {
-			return;
-		}
-
-		this.jumpSound.play();
-
-		this.bird.body.velocity.y = -350;
-
-		// Create animation
-		var animation = game.add.tween(this.bird);
-		// Change angle of sprite to -20 degrees in 100 ms
-		animation.to({angle:-20}, 100);
-		animation.start();
-	},
-
-	restartGame: function() {
+	socketGame.on('start', function(message){
+		console.log('game started');
+		birds = message.players;
 		game.state.start('main');
-	},
 
-	addOnePipe: function(x, y) {
-		// Grab a pipe 
-		var pipe = this.pipes.getFirstDead();
-		pipe.reset(x, y);
-		pipe.body.velocity.x = -200;
+		if(isBoss){
 
-		// Kill the pipe when it's no longer visible
-		pipe.checkWorldBounds = true;
-		pipe.outOfBoundsKill = true;
-	},
+		}
+		else{
 
-	addRowOfPipes: function() {
-		// Create a gap to fly through
-		var hole = Math.floor(Math.random() * 5) + 1;
-
-		// Add 6 pipes
-		for (var i=0; i<8; i++) {
-			if (i != hole && i != hole + 1) {
-				this.addOnePipe(500, i*60+10);
-			}
 		}
 
-		// Increase score
-		this.score += 1;
-		this.labelScore.text = this.score;
-	},
-
-	hitPipe: function() {
-		if (this.bird.alive == false) {
-			return;
-		}
-		this.bird.alive = false;
+	});
+});
 		
-		// Stop pipes from appearing
-		game.time.events.remove(this.timer);
-
-		// Go through all pipes and stop their movement
-		this.pipes.forEachAlive(function(p) {
-			p.body.velocity.x = 0;
-		}, this);
-	},
-};
-// Add main state to game
-game.state.add('main', mainState);
-

@@ -22,7 +22,7 @@ process.on('message', function(message) {
 io.on('connection', function(socket) {
 	process.send("game.js received client connection");
 	socket.join('game');
-	io.to('game').emit('message', "hello !");
+	io.to('game').emit('start', {players: Object.keys(room)});
 });
 
 

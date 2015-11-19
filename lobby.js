@@ -56,16 +56,27 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	    }    
 	});
 	
-	socket.on('start game', function(message){
+	socket.on('ready game', function(message){
 		// launch game.js in a child process here
-		var p = child_process.fork(__dirname + '/game');
-		var room = io.nsps['/'].adapter.rooms[socket.current_room]; 
-		var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
-		p.send([portNum, room]);
-		socket.emit('gamePort', portNum);
-		p.on('message', function(message) {
-			console.log("CHILD SAID: " + message);
-		});
+		
+		var room = io.nsps['/'].adapter.rooms[socket.current_room];
+		room.readied = (room.readied==null) ? 2 : room.readied+1; // 2 because "readied" is a member of the room. it's a guy
+		console.log(room.readied);
+		console.log("keys length: " + Object.keys(room).length);
+		console.log("keys: " + Object.keys(room));
+		if(room.readied == Object.keys(room).length){
+			console.log("Everyone ready, starting game server..")
+			var p = child_process.fork(__dirname + '/gameserver');
+			var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
+			p.send([portNum, room]);
+			console.log("Emitting game port ");
+			io.sockets.in(socket.current_room).emit('gamePort', portNum);
+			p.on('message', function(message) {
+				console.log("CHILD SAID: " + message);
+			});
+		}
+		
+
 	});
 	
 	console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
