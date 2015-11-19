@@ -9,9 +9,11 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Bootstrap -->
-	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-	  <link rel="stylesheet" href="/css/styles.css">
-	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/styles.css">
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 	<script src="/socket.io/socket.io.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -23,6 +25,7 @@
     <script>
     	$(document).ready(function() {
     		// Hide game room div at the start
+			$("#game").hide();
 			$("#div-room").hide();
     	});
 		function join(){
@@ -34,6 +37,7 @@
 		}
 		function start() {
 			socket.emit('start game');
+			$("#game").show();
 		}
 		var socket = io();
 		var roomMembers = [];
@@ -61,6 +65,31 @@
 			console.log('DISCONNECTED ');
 			$('#lobby-messages').text(messages.id + " disconnected");
 		});
+		var socketGame;
+		socket.on('gamePort', function(portNum) {
+			console.log("Trying to connect to game port: " + portNum);
+			socketGame = io.connect('http://localhost:' + portNum);
+			
+			socketGame.on('message', function(message) {
+				console.log("Message from game.js: " + message);
+				isBoss = message.youRBoss;
+			});
+
+			socketGame.on('update', function(message){
+				// update the game state
+			});
+
+			socketGame.on('start', function(message){
+				if(isBoss){
+
+				}
+				else{
+
+				}
+
+			});
+		});
+		
 
 	</script>
   </head>
@@ -96,6 +125,7 @@
 		</div>
 		<button class="btn btn-success" onclick='start()'>start game</button>
 	</div>
+	<div id="game"></div>
   </body>
 </html>
 

@@ -5,6 +5,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var child_process = require('child_process');
 
 
 
@@ -14,6 +15,8 @@ http.listen(port, function(){
 });
 
 app.use("/css", express.static(__dirname + '/css'));
+app.use("/js", express.static(__dirname + '/js'));
+app.use("/assets", express.static(__dirname + '/assets'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname+'/html/index.html');
@@ -55,6 +58,14 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	
 	socket.on('start game', function(message){
 		// launch game.js in a child process here
+		var p = child_process.fork(__dirname + '/game');
+		var room = io.nsps['/'].adapter.rooms[socket.current_room]; 
+		var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
+		p.send([portNum, room]);
+		socket.emit('gamePort', portNum);
+		p.on('message', function(message) {
+			console.log("CHILD SAID: " + message);
+		});
 	});
 	
 	console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
