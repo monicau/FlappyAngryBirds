@@ -10,9 +10,9 @@ function join(){
 	$("#div-lobby").hide();
 	$("#div-room").show();
 }
-function start() {
+function ready() {
 	socket.emit('ready game');
-	$("#game").show();
+	$("#btn-ready").prop("disabled", true);
 }
 var socket = io();
 var roomMembers = [];
@@ -34,6 +34,23 @@ socket.on('room members', function(message){
 socket.on('lobby members', function(message){
 	console.log(message);
 	$('#lobby-members').text(message.members);
+});
+
+socket.on('gamerooms', function(message){
+	console.log("game rooms:" + message);
+	$("#gamerooms").empty();
+	for (var i = 0 ; i < message.length; i++ ) {
+		$('#gamerooms').append($('<li>').text(message[i]));
+	}
+});
+
+socket.on('members ready', function(message) {
+	console.log("members ready:");
+	console.log(message);
+	$("#room-members-ready").empty();
+	for (var i = 0 ; i < message.length; i++ ) {
+		$('#room-members-ready').append($('<li>').text(message[i]+' ready'));
+	}
 });
 
 socket.on('disconnected', function(messages){
@@ -62,15 +79,8 @@ socket.on('gamePort', function(portNum) {
 	socketGame.on('start', function(message){
 		console.log('game started');
 		birds = message.players;
-		game.state.start('main');
-
-		if(isBoss){
-
-		}
-		else{
-
-		}
-
+		$("#game").show();
+		// game.state.start('main');
 	});
 });
 		

@@ -23,6 +23,8 @@ app.get('/', function(req, res){
 });
 
 var lobby_members = [];
+var gamerooms = []; // list of created rooms
+var rooms_ready = {}; //key: room name, value: list of ready players 
 
 io.on('connection', function (socket){ // socket is the newly connected socket
   // join the lobby when first entering the app
@@ -42,6 +44,8 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	});
 	
 	socket.on('join room', function(message){
+		gamerooms.push(message.room);
+		io.to('lobby').emit('gamerooms', gamerooms);
   		console.log(socket.id+' joined room '+message.room);
 		socket.leave(socket.current_room);
 		socket.join(message.room);
@@ -55,17 +59,29 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	      console.log(Object.keys(room) + ' are in the room');
 	    }    
 	});
+
+	
 	
 	socket.on('ready game', function(message){
-		// launch game.js in a child process here
-		
+		// Add this socket to ready list
+		if (rooms_ready[socket.current_room]==null) {
+			rooms_ready[socket.current_room] = [socket.id];
+		} else {
+			rooms_ready[socket.current_room].push(socket.id);
+		}
+		// Remove room from open game rooms to prevent new users joining
+		var index = gamerooms.indexOf(socket.current_room);
+		gamerooms = gamerooms.splice(index, 1);
+		io.to('lobby').emit('gamerooms', gamerooms);
+
 		var room = io.nsps['/'].adapter.rooms[socket.current_room];
-		room.readied = (room.readied==null) ? 2 : room.readied+1; // 2 because "readied" is a member of the room. it's a guy
-		console.log(room.readied);
-		console.log("keys length: " + Object.keys(room).length);
-		console.log("keys: " + Object.keys(room));
-		if(room.readied == Object.keys(room).length){
-			console.log("Everyone ready, starting game server..")
+
+		// Emit readied players
+		io.to(socket.current_room).emit('members ready', rooms_ready[socket.current_room]);
+
+		// If everyone is ready, start the game
+		if(rooms_ready[socket.current_room].length == Object.keys(room).length){
+			console.log("Everyone ready, starting game server..");
 			var p = child_process.fork(__dirname + '/gameserver');
 			var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
 			p.send([portNum, room]);
@@ -75,10 +91,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 				console.log("CHILD SAID: " + message);
 			});
 		}
-		
-
 	});
-	
 	console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
 });
 

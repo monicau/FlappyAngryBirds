@@ -41,6 +41,9 @@
 			<h4>Current members</h4>
 			<div id="lobby-members"></div>
 			<hr>
+			<h4>Open gamerooms</h4>
+			<ul id="gamerooms"></ul>
+			<hr>
 			<h4>Log</h4>
 			<ul id="lobby-messages"></ul>
 		</div>
@@ -48,13 +51,20 @@
 	<div id="div-room">
 		<h1>Game room</h1>
 		<div class="well">
-			<h4>Current members</h4>
-			<div id="room-members"></div>
-			<hr>
-			<h4>Log</h4>
-			<ul id="room-messages"></ul>
+			<div class="row">
+				<div class="col-md-8">
+					<h4>Current members</h4>
+					<div id="room-members"></div>
+					<hr>
+					<h4>Log</h4>
+					<ul id="room-messages"></ul>
+				</div>
+				<div class="col-md-4">
+					<h4>Players ready</h4>
+					<ul id="room-members-ready"></ul>
+				</div>
 		</div>
-		<button class="btn btn-success" onclick='start()'>start game</button>
+		<button id="btn-ready" class="btn btn-success" onclick='ready()'>Ready</button>
 	</div>
 	<div id="game"></div>
   </body>
