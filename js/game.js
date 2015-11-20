@@ -143,6 +143,4 @@ var mainState = {
 	},
 
 };
-// Add main state to game
-game.state.add('main', mainState);
 

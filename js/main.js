@@ -1,8 +1,16 @@
 $(document).ready(function() {
 	// Hide game room div at the start
-	$("#game").hide();
+	$("#div-join").hide();
 	$("#div-room").hide();
+	$("#div-lobby").hide();
+	$("#game").hide();
 });
+function username() {
+	socket.emit('username', document.getElementById('username').value);
+	$("#div-username").hide();
+	$("#div-lobby").show();
+	$("#div-join").show();
+}
 function join(){
 	console.log('joining room');
 	socket.emit('join room', { room:document.getElementById('room name').value });
@@ -28,7 +36,7 @@ socket.on('new member', function(content) {
 
 socket.on('room members', function(message){
 	console.log(message);
-	$('#room-members').text(message);
+	$('#room-members').text(message); 
 });
 
 socket.on('lobby members', function(message){
@@ -80,7 +88,9 @@ socket.on('gamePort', function(portNum) {
 		console.log('game started');
 		birds = message.players;
 		$("#game").show();
-		// game.state.start('main');
+		// Add main state to game
+		game.state.add('main', mainState);
+		game.state.start('main');
 	});
 });
 		

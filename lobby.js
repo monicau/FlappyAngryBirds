@@ -25,28 +25,41 @@ app.get('/', function(req, res){
 var lobby_members = [];
 var gamerooms = []; // list of created rooms
 var rooms_ready = {}; //key: room name, value: list of ready players 
+var socket_usernames = {}; //key: socket ID, value: username
 
 io.on('connection', function (socket){ // socket is the newly connected socket
-  // join the lobby when first entering the app
-	socket.join('lobby');  
-	socket.current_room = 'lobby';
-	lobby_members.push(socket.id);
-	io.to('lobby').emit('new comer', {id:socket.id}); // tell others about it
-	io.to('lobby').emit('lobby members', {members: lobby_members });
 	socketID = socket.id;
 
 	socket.on('disconnect', function(){
+		//TODO: remove socket.id from socket_usernames dictionary
+
 		io.to('lobby').emit('disconnected', {id:socketID});
 		var index = lobby_members.indexOf(socket.id);
 		lobby_members = lobby_members.splice(index, 1);
 		io.to('lobby').emit('lobby members', {members: lobby_members })
 
 	});
+
+	socket.on('username', function(message) {
+		// Join lobby
+		lobby_members.push(message);
+		socket.join('lobby');  
+		socket.current_room = 'lobby';
+		io.to('lobby').emit('new comer', {id:message}); // tell others about it
+
+		//TODO need to check if username/socket id exists already before adding it
+		socket_usernames[socket.id] = message;
+		console.log("New user: " + message + " with socket " + socket.id);
+		io.to('lobby').emit('lobby members', {members: lobby_members })
+	});
 	
 	socket.on('join room', function(message){
 		gamerooms.push(message.room);
+
+		// Emit updated game room to people in lobby
 		io.to('lobby').emit('gamerooms', gamerooms);
-  		console.log(socket.id+' joined room '+message.room);
+
+  		console.log(socket_usernames[socket.id] + "(" + socket.id+') joined room '+message.room);
 		socket.leave(socket.current_room);
 		socket.join(message.room);
 		socket.current_room = message.room;
@@ -92,6 +105,6 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			});
 		}
 	});
-	console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
+	// console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
 });
 

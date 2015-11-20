@@ -13,8 +13,8 @@
 	<link rel="stylesheet" href="/css/styles.css">
 	<script type="text/javascript" src="js/phaser.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/game.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -29,11 +29,15 @@
 	  <h1>Welcome to our Flappy Bird game!</h1>
 	  <p>Here is some placeholder text informing the user about what to do.</p>
   </div>
+  	<div id="div-username">
+  		<h1>What's your username?</h1>
+	  	<input class="form-control" id="username" type="text" name="username" placeholder="Username"><br>
+		<button class="btn btn-primary" onclick='username()'>Submit</button>
+  	</div>
   	<div id="div-join">
   		<h1>Create or join a room</h1>
 	  	<input class="form-control" id="room name" type="text" name="room" placeholder="Room name"><br>
-		<button class="btn btn-primary" onclick='create()'>Create</button>
-		<button class="btn btn-primary" onclick='join()'>Enter</button>
+		<button class="btn btn-primary" onclick='join()'>Create/Join</button>
 	</div>
 	<div id="div-lobby">
 		<h2>Lobby</h2>
@@ -63,8 +67,9 @@
 					<h4>Players ready</h4>
 					<ul id="room-members-ready"></ul>
 				</div>
+			</div>
+			<button id="btn-ready" class="btn btn-success" onclick='ready()'>Ready</button>
 		</div>
-		<button id="btn-ready" class="btn btn-success" onclick='ready()'>Ready</button>
 	</div>
 	<div id="game"></div>
   </body>
