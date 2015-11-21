@@ -31,13 +31,13 @@
   </div>
   	<div id="div-username">
   		<h1>What's your username?</h1>
-	  	<input class="form-control" id="username" type="text" name="username" placeholder="Username"><br>
-		<button class="btn btn-primary" onclick='username()'>Submit</button>
-  	</div>
+		<input class="form-control" id="username" type="text" name="username" placeholder="Username" onkeydown="if (event.keyCode == 13) document.getElementById('usernameSubmit').click()"><br>
+		<button id="usernameSubmit" class="btn btn-primary" onclick='username()'>Submit</button>
+	</div>
   	<div id="div-join">
   		<h1>Create or join a room</h1>
-	  	<input class="form-control" id="room name" type="text" name="room" placeholder="Room name"><br>
-		<button class="btn btn-primary" onclick='join()'>Create/Join</button>
+	  	<input class="form-control" id="room name" type="text" name="room" placeholder="Room name" onkeydown="if (event.keyCode == 13) document.getElementById('roomnameSubmit').click()"><br>
+		<button id="roomnameSubmit" class="btn btn-primary" onclick='join()'>Create/Join</button>
 	</div>
 	<div id="div-lobby">
 		<h2>Lobby</h2>
