@@ -31,13 +31,11 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	socketID = socket.id;
 
 	socket.on('disconnect', function(){
-		//TODO: remove socket.id from socket_usernames dictionary
-
 		io.to('lobby').emit('disconnected', {id:socketID});
-		var index = lobby_members.indexOf(socket.id);
-		lobby_members = lobby_members.splice(index, 1);
-		io.to('lobby').emit('lobby members', {members: lobby_members })
 
+		removeMemberFromLobby(socketID);
+
+		delete socket_usernames[socketID];
 	});
 
 	socket.on('username', function(message) {
@@ -47,19 +45,25 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		socket.current_room = 'lobby';
 		io.to('lobby').emit('new comer', {id:message}); // tell others about it
 
-		//TODO need to check if username/socket id exists already before adding it
-		socket_usernames[socket.id] = message;
-		console.log("New user: " + message + " with socket " + socket.id);
-		io.to('lobby').emit('lobby members', {members: lobby_members })
+		if(!(socketID in socket_usernames && socket_usernames[socketID] === message)){
+			socket_usernames[socket.id] = message;
+			console.log("New user: " + message + " with socket " + socket.id);
+			io.to('lobby').emit('lobby members', {members: lobby_members })
+		}
 	});
 	
 	socket.on('join room', function(message){
-		gamerooms.push(message.room);
+		// if gameroom doesn't already exist:
+		if(gamerooms.indexOf(message.room) == -1){
+			gamerooms.push(message.room);
 
-		// Emit updated game room to people in lobby
-		io.to('lobby').emit('gamerooms', gamerooms);
+			// Emit updated game room to people in lobby
+			io.to('lobby').emit('gamerooms', gamerooms);
+		}
 
-  		console.log(socket_usernames[socket.id] + "(" + socket.id+') joined room '+message.room);
+		removeMemberFromLobby(socketID);
+
+		console.log(socket_usernames[socket.id] + "(" + socket.id+') joined room '+message.room);
 		socket.leave(socket.current_room);
 		socket.join(message.room);
 		socket.current_room = message.room;
@@ -108,3 +112,9 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	// console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
 });
 
+function removeMemberFromLobby(socketID){
+	var username = socket_usernames[socketID];
+	var index = lobby_members.indexOf(username);
+	lobby_members = lobby_members.splice(index, 1);
+	io.to('lobby').emit('lobby members', {members: lobby_members });
+}
