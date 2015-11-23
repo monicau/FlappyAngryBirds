@@ -28,14 +28,12 @@ var rooms_ready = {}; //key: room name, value: list of ready players
 var socket_usernames = {}; //key: socket ID, value: username
 
 io.on('connection', function (socket){ // socket is the newly connected socket
-	socketID = socket.id;
-
 	socket.on('disconnect', function(){
-		io.to('lobby').emit('disconnected', {id:socketID});
+		io.to('lobby').emit('disconnected', {id:socket.id});
 
-		removeMemberFromLobby(socketID);
+		removeMemberFromLobby(socket.id);
 
-		delete socket_usernames[socketID];
+		delete socket_usernames[socket.id];
 	});
 
 	socket.on('username', function(message) {
@@ -45,7 +43,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		socket.current_room = 'lobby';
 		io.to('lobby').emit('new comer', {id:message}); // tell others about it
 
-		if(!(socketID in socket_usernames && socket_usernames[socketID] === message)){
+		if(!(socket.id in socket_usernames && socket_usernames[socket.id] === message)){
 			socket_usernames[socket.id] = message;
 			console.log("New user: " + message + " with socket " + socket.id);
 			io.to('lobby').emit('lobby members', {members: lobby_members })
@@ -62,7 +60,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			io.to('lobby').emit('gamerooms', gamerooms);
 		}
 
-		removeMemberFromLobby(socketID);
+		removeMemberFromLobby(socket.id);
 
 		console.log(socket_usernames[socket.id] + "(" + socket.id+') joined room '+message.room);
 		socket.leave(socket.current_room);
