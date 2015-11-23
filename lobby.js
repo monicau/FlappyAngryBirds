@@ -50,6 +50,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			console.log("New user: " + message + " with socket " + socket.id);
 			io.to('lobby').emit('lobby members', {members: lobby_members })
 		}
+		console.log("Current members:" + JSON.stringify(socket_usernames));
 	});
 	
 	socket.on('join room', function(message){
@@ -88,7 +89,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		}
 		// Remove room from open game rooms to prevent new users joining
 		var index = gamerooms.indexOf(socket.current_room);
-		gamerooms = gamerooms.splice(index, 1);
+		gamerooms.splice(index, 1);
 		io.to('lobby').emit('gamerooms', gamerooms);
 
 		var room = io.nsps['/'].adapter.rooms[socket.current_room];
@@ -113,8 +114,14 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 });
 
 function removeMemberFromLobby(socketID){
+	console.log("Removing member from lobby.");
 	var username = socket_usernames[socketID];
+	console.log("username: " + username);
+	console.log("Socket ID: " + socketID);
+	console.log("Lobby members: " + JSON.stringify(lobby_members));
 	var index = lobby_members.indexOf(username);
-	lobby_members = lobby_members.splice(index, 1);
+	console.log("Index: " + index);
+	lobby_members.splice(index, 1);
+	console.log("New lobby members: " + JSON.stringify(lobby_members));
 	io.to('lobby').emit('lobby members', {members: lobby_members });
 }

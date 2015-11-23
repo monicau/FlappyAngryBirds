@@ -66,12 +66,13 @@ var mainState = {
 
 		if (isBoss) {
 			// Do collision detection
-			for each(bird in birds){
+			for(var i = 0; i<birds.length; i++){
 				// check pipes
 				game.physics.arcade.overlap(bird, this.pipes, this.hitPipe, null, this);
 				// check bird hit bird
-				// TODO 
+				// TODO
 			}
+
 			birdUpdates();
 		}
 	},
