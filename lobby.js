@@ -46,19 +46,26 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	});
 
 	socket.on('new user', function(username) {
-		// Join lobby
-		lobby_members.push(username);
-		socket.join('lobby');  
-		socket.current_room = 'lobby';
-		io.to('lobby').emit('new lobby member', username); // tell others about it
-
-		// If they aren't currently in socket_usernames, add them, and notify the loby members
-		if(!(socket.id in socket_usernames && socket_usernames[socket.id] === username)){
-			socket_usernames[socket.id] = username;
-			console.log("New user: " + username + " with socket " + socket.id);
-			io.to('lobby').emit('lobby members', lobby_members)
+		if(usernameTaken(username)){
+			socket.emit("username taken");
+			console.log("username taken");
 		}
-		console.log("Current members:" + JSON.stringify(socket_usernames));
+		else{
+			socket.emit('username valid');
+			// Join lobby
+			lobby_members.push(username);
+			socket.join('lobby');
+			socket.current_room = 'lobby';
+			io.to('lobby').emit('new lobby member', username); // tell others about it
+
+			// If they aren't currently in socket_usernames, add them, and notify the loby members
+			if(!(socket.id in socket_usernames && socket_usernames[socket.id] === username)){
+				socket_usernames[socket.id] = username;
+				console.log("New user: " + username + " with socket " + socket.id);
+				io.to('lobby').emit('lobby members', lobby_members)
+			}
+			console.log("Current members:" + JSON.stringify(socket_usernames));
+		}
 	});
 	
 	socket.on('join room', function(newRoom){
@@ -166,4 +173,13 @@ function getMembersInRoom(room) {
 		}
 	}
 	return usernames_in_room;
+}
+
+function usernameTaken(username){
+	for(var key in socket_usernames){
+		if (socket_usernames[key] == username){
+			return true;
+		}
+	}
+	return false;
 }

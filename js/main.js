@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	// Hide game room div at the start
+	$("#invalid-username-alert").hide();
 	$("#div-join").hide();
 	$("#div-room").hide();
 	$("#div-lobby").hide();
@@ -7,9 +8,6 @@ $(document).ready(function() {
 });
 function newUser() {
 	socket.emit('new user', document.getElementById('username').value);
-	$("#div-username").hide();
-	$("#div-lobby").show();
-	$("#div-join").show();
 }
 function joinRoom(){
 	console.log('joining room');
@@ -25,6 +23,18 @@ function readyUp() {
 
 var socket = io();
 var roomMembers = [];
+
+socket.on('username taken', function(){
+	$("#invalid-username-alert").show();
+});
+
+socket.on('username valid', function(){
+	$("#div-username").hide();
+	$("#invalid-username-alert").hide();
+	$("#div-lobby").show();
+	$("#div-join").show();
+});
+
 socket.on('new lobby member', function(username){
 	console.log(username + ' has entered room');
 	$('#lobby-messages').append($('<li>').text(username + ' has entered the lobby'));
