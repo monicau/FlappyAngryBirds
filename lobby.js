@@ -30,7 +30,13 @@ var socket_usernames = {}; //key: socket ID, value: username
 io.on('connection', function (socket){ // socket is the newly connected socket
 	socket.on('disconnect', function(){
 		var old_room = socket.current_room;
-		console.log("Socket " + socket.id + "disconnected, Old room was :" + old_room);
+		if(getMembersInRoom(old_room).length ==  0){
+			console.log(old_room + " is empty, removing it.");
+			var index = gamerooms.indexOf(old_room);
+			gamerooms.splice(index, 1);
+			io.to('lobby').emit('gamerooms', gamerooms);
+		}
+		console.log("Socket " + socket.id + " disconnected, Old room was :" + old_room);
 
 		// Remove user's state from their previous room
 		if(old_room){
@@ -48,7 +54,6 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	socket.on('new user', function(username) {
 		if(usernameTaken(username)){
 			socket.emit("username taken");
-			console.log("username taken");
 		}
 		else{
 			socket.emit('username valid');
@@ -61,10 +66,10 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			// If they aren't currently in socket_usernames, add them, and notify the loby members
 			if(!(socket.id in socket_usernames && socket_usernames[socket.id] === username)){
 				socket_usernames[socket.id] = username;
-				console.log("New user: " + username + " with socket " + socket.id);
+				console.log("New user: username " + username + " with socket " + socket.id);
 				io.to('lobby').emit('lobby members', lobby_members)
 			}
-			console.log("Current members:" + JSON.stringify(socket_usernames));
+			console.log("Lobby members:" + JSON.stringify(socket_usernames));
 		}
 	});
 	
@@ -160,15 +165,17 @@ function removeMemberFromRoom(socket, room){
 }
 
 function getMembersInRoom(room) {
+	members = io.nsps['/'].adapter.rooms[room];
 	var usernames_in_room = [];
-
-	var sockets_in_room = Object.keys(io.nsps['/'].adapter.rooms[room]);
-	if (sockets_in_room) {
-		for (var i = 0; i < sockets_in_room.length; i++) {
-			var socketID = sockets_in_room[i];
-			var username = socket_usernames[socketID];
-			if (username) {
-				usernames_in_room.push(username);
+	if(members){
+		var sockets_in_room = Object.keys(members);
+		if (sockets_in_room) {
+			for (var i = 0; i < sockets_in_room.length; i++) {
+				var socketID = sockets_in_room[i];
+				var username = socket_usernames[socketID];
+				if (username) {
+					usernames_in_room.push(username);
+				}
 			}
 		}
 	}
