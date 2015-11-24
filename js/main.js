@@ -37,23 +37,28 @@ socket.on('username valid', function(){
 
 socket.on('new lobby member', function(username){
 	console.log(username + ' has entered room');
-	$('#lobby-messages').append($('<li>').text(username + ' has entered the lobby'));
+	$('#lobby-messages').append($('<li>').text(username + ' entered the lobby'));
 });
 
 socket.on('new room member', function(username) {
-	$('#room-messages').append($('<li>').text(username + ' has entered the room'));
+	$('#room-messages').append($('<li>').text(username + ' entered the room'));
 	roomMembers.push(username);
 });
 
 socket.on('room members', function(roomMembers){
 	console.log(roomMembers);
-	$('#room-members').text(roomMembers);
+	$('#room-members').empty();
+	for (var i = 0 ; i < roomMembers.length; i++ ) {
+		$('#room-members').append($('<li>').text(roomMembers[i]));
+	}
 });
 
 socket.on('lobby members', function(members){
 	console.log(members);
-	$('#lobby-members').text(members);
-});
+	$('#lobby-members').empty();
+	for (var i = 0 ; i < members.length; i++ ) {
+		$('#lobby-members').append($('<li>').text(members[i]));
+	}});
 
 socket.on('gamerooms', function(rooms){
 	console.log("game rooms:" + rooms);
@@ -68,7 +73,7 @@ socket.on('members ready in room', function(readyMembers) {
 	console.log(readyMembers);
 	$("#room-members-ready").empty();
 	for (var i = 0 ; i < readyMembers.length; i++ ) {
-		$('#room-members-ready').append($('<li>').text(readyMembers[i]+' ready'));
+		$('#room-members-ready').append($('<li>').text(readyMembers[i]));
 	}
 });
 

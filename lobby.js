@@ -114,7 +114,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 
 
 		// Emit readied players
-		io.to(socket.current_room).emit('members ready in room', ready_members_per_room[socket.current_room]);
+		io.to(socket.current_room).emit('members ready in room', getReadyMembersInRoom(socket.current_room));
 
 		// If everyone is ready, start the game
 		var members_of_room = io.nsps['/'].adapter.rooms[socket.current_room];
@@ -148,7 +148,7 @@ function removeMemberFromLobby(socket){
 
 function removeMemberFromRoom(socket, room){
 	var username = socket_usernames[socket.id];
-	io.to('lobby').emit('room member disconnected', username);
+	io.to(socket.current_room).emit('room member disconnected', username);
 	console.log("Removing member " + socket_usernames[socket.id] + " from room " + room);
 
 	var ready_members_in_room = ready_members_per_room[room];
@@ -162,6 +162,7 @@ function removeMemberFromRoom(socket, room){
 	}
 
 	io.to(socket.current_room).emit('room members', getMembersInRoom(room));
+	io.to(socket.current_room).emit('members ready in room', getReadyMembersInRoom(socket.current_room));
 }
 
 function getMembersInRoom(room) {
@@ -189,4 +190,14 @@ function usernameTaken(username){
 		}
 	}
 	return false;
+}
+
+function getReadyMembersInRoom(room){
+	var ready_sockets = ready_members_per_room[room];
+	var ready_usernames = [];
+	for(var i=0; i<ready_sockets.length; i++){
+		var ready_socket = ready_sockets[i];
+		ready_usernames.push(socket_usernames[ready_socket]);
+	}
+	return ready_usernames
 }
