@@ -24,83 +24,93 @@ app.get('/', function(req, res){
 
 var lobby_members = [];
 var gamerooms = []; // list of created rooms
-var rooms_ready = {}; //key: room name, value: list of ready players 
+var ready_members_per_room = {}; //key: room name, value: list of ready players
 var socket_usernames = {}; //key: socket ID, value: username
 
 io.on('connection', function (socket){ // socket is the newly connected socket
 	socket.on('disconnect', function(){
-		io.to('lobby').emit('disconnected', {id:socket.id});
+		var old_room = socket.current_room;
+		console.log("Socket " + socket.id + "disconnected, Old room was :" + old_room);
 
-		removeMemberFromLobby(socket.id);
+		// Remove user's state from their previous room
+		if(old_room){
+			if(old_room == 'lobby'){
+				removeMemberFromLobby(socket);
+			}
+			else{
+				removeMemberFromRoom(socket, old_room);
+			}
+		}
 
 		delete socket_usernames[socket.id];
 	});
 
-	socket.on('username', function(message) {
+	socket.on('new user', function(username) {
 		// Join lobby
-		lobby_members.push(message);
+		lobby_members.push(username);
 		socket.join('lobby');  
 		socket.current_room = 'lobby';
-		io.to('lobby').emit('new comer', {id:message}); // tell others about it
+		io.to('lobby').emit('new lobby member', username); // tell others about it
 
-		if(!(socket.id in socket_usernames && socket_usernames[socket.id] === message)){
-			socket_usernames[socket.id] = message;
-			console.log("New user: " + message + " with socket " + socket.id);
-			io.to('lobby').emit('lobby members', {members: lobby_members })
+		// If they aren't currently in socket_usernames, add them, and notify the loby members
+		if(!(socket.id in socket_usernames && socket_usernames[socket.id] === username)){
+			socket_usernames[socket.id] = username;
+			console.log("New user: " + username + " with socket " + socket.id);
+			io.to('lobby').emit('lobby members', lobby_members)
 		}
 		console.log("Current members:" + JSON.stringify(socket_usernames));
 	});
 	
-	socket.on('join room', function(message){
-		// if gameroom doesn't already exist:
-		if(gamerooms.indexOf(message.room) == -1){
-			gamerooms.push(message.room);
+	socket.on('join room', function(newRoom){
+		// if gameroom doesn't already exist, create it
+		if(gamerooms.indexOf(newRoom) == -1){
+			gamerooms.push(newRoom);
 
-			// Emit updated game room to people in lobby
+			// Emit new game room to people in lobby
 			io.to('lobby').emit('gamerooms', gamerooms);
 		}
 
-		removeMemberFromLobby(socket.id);
+		removeMemberFromLobby(socket);
 
-		console.log(socket_usernames[socket.id] + "(" + socket.id+') joined room '+message.room);
+		console.log(socket_usernames[socket.id] + "(" + socket.id + ') joined room ' + newRoom);
 		socket.leave(socket.current_room);
-		socket.join(message.room);
-		socket.current_room = message.room;
-		io.to(socket.current_room).emit('new member', {id:socket.id});
-	    // get copy of members of the room and send it
-	    var room = io.nsps['/'].adapter.rooms[socket.current_room]; 
-	    if(room){
-	      // socket.emit('room members',Object.keys(room));
-	      io.to(socket.current_room).emit('room members',Object.keys(room));
-	      console.log(Object.keys(room) + ' are in the room');
-	    }    
+		socket.join(newRoom);
+		socket.current_room = newRoom;
+
+	    // send the new member's username to members of the room, to be logged
+		io.to(socket.current_room).emit('new room member', socket_usernames[socket.id]);
+
+		// send new usernames of all the members to members of the room
+		var usernames_in_room = getMembersInRoom(socket.current_room);
+		io.to(socket.current_room).emit('room members', usernames_in_room);
 	});
 
 	
 	
-	socket.on('ready game', function(message){
-		// Add this socket to ready list
-		if (rooms_ready[socket.current_room]==null) {
-			rooms_ready[socket.current_room] = [socket.id];
+	socket.on('ready for game', function(){
+		// Add this socket to ready list, creating one if no list exists already or the list is empty
+		if (ready_members_per_room[socket.current_room] == null || ready_members_per_room[socket.current_room].length == 0) {
+			ready_members_per_room[socket.current_room] = [socket.id];
 		} else {
-			rooms_ready[socket.current_room].push(socket.id);
+			ready_members_per_room[socket.current_room].push(socket.id);
 		}
+
 		// Remove room from open game rooms to prevent new users joining
 		var index = gamerooms.indexOf(socket.current_room);
 		gamerooms.splice(index, 1);
 		io.to('lobby').emit('gamerooms', gamerooms);
 
-		var room = io.nsps['/'].adapter.rooms[socket.current_room];
 
 		// Emit readied players
-		io.to(socket.current_room).emit('members ready', rooms_ready[socket.current_room]);
+		io.to(socket.current_room).emit('members ready in room', ready_members_per_room[socket.current_room]);
 
 		// If everyone is ready, start the game
-		if(rooms_ready[socket.current_room].length == Object.keys(room).length){
+		var members_of_room = io.nsps['/'].adapter.rooms[socket.current_room];
+		if(ready_members_per_room[socket.current_room].length == Object.keys(members_of_room).length){
 			console.log("Everyone ready, starting game server..");
 			var p = child_process.fork(__dirname + '/gameserver');
 			var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
-			p.send([portNum, room]);
+			p.send([portNum, members_of_room]);
 			console.log("Emitting game port ");
 			io.sockets.in(socket.current_room).emit('gamePort', portNum);
 			p.on('message', function(message) {
@@ -111,15 +121,49 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	// console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
 });
 
-function removeMemberFromLobby(socketID){
-	console.log("Removing member from lobby.");
-	var username = socket_usernames[socketID];
-	console.log("username: " + username);
-	console.log("Socket ID: " + socketID);
-	console.log("Lobby members: " + JSON.stringify(lobby_members));
+function removeMemberFromLobby(socket){
+	var username = socket_usernames[socket.id];
+	io.to('lobby').emit('lobby member disconnected', username);
+
+	console.log("Removing member " + username + " from lobby.");
+
 	var index = lobby_members.indexOf(username);
-	console.log("Index: " + index);
 	lobby_members.splice(index, 1);
+
 	console.log("New lobby members: " + JSON.stringify(lobby_members));
-	io.to('lobby').emit('lobby members', {members: lobby_members });
+	io.to('lobby').emit('lobby members', lobby_members);
+}
+
+function removeMemberFromRoom(socket, room){
+	var username = socket_usernames[socket.id];
+	io.to('lobby').emit('room member disconnected', username);
+	console.log("Removing member " + socket_usernames[socket.id] + " from room " + room);
+
+	var ready_members_in_room = ready_members_per_room[room];
+	console.log("Members in rooms " + JSON.stringify(getMembersInRoom(room)));
+
+	if(ready_members_in_room){
+		var index = ready_members_in_room.indexOf(socket.id);
+		ready_members_in_room.splice(index, 1);
+
+		ready_members_per_room[room] = ready_members_in_room;
+	}
+
+	io.to(socket.current_room).emit('room members', getMembersInRoom(room));
+}
+
+function getMembersInRoom(room) {
+	var usernames_in_room = [];
+
+	var sockets_in_room = Object.keys(io.nsps['/'].adapter.rooms[room]);
+	if (sockets_in_room) {
+		for (var i = 0; i < sockets_in_room.length; i++) {
+			var socketID = sockets_in_room[i];
+			var username = socket_usernames[socketID];
+			if (username) {
+				usernames_in_room.push(username);
+			}
+		}
+	}
+	return usernames_in_room;
 }

@@ -5,65 +5,72 @@ $(document).ready(function() {
 	$("#div-lobby").hide();
 	$("#game").hide();
 });
-function username() {
-	socket.emit('username', document.getElementById('username').value);
+function newUser() {
+	socket.emit('new user', document.getElementById('username').value);
 	$("#div-username").hide();
 	$("#div-lobby").show();
 	$("#div-join").show();
 }
-function join(){
+function joinRoom(){
 	console.log('joining room');
-	socket.emit('join room', { room:document.getElementById('room name').value });
+	socket.emit('join room', document.getElementById('room name').value);
 	$("#div-join").hide();
 	$("#div-lobby").hide();
 	$("#div-room").show();
 }
-function ready() {
-	socket.emit('ready game');
+function readyUp() {
+	socket.emit('ready for game');
 	$("#btn-ready").prop("disabled", true);
 }
+
 var socket = io();
 var roomMembers = [];
-socket.on('new comer', function(content){
-	console.log(content.id+' has entered room');
-	$('#lobby-messages').append($('<li>').text(content.id+' has entered the lobby'));
-	
-});
-socket.on('new member', function(content) {
-	$('#room-messages').append($('<li>').text(content.id+' has entered the room'));
-	roomMembers.push(content.id);
+socket.on('new lobby member', function(username){
+	console.log(username + ' has entered room');
+	$('#lobby-messages').append($('<li>').text(username + ' has entered the lobby'));
 });
 
-socket.on('room members', function(message){
-	console.log(message);
-	$('#room-members').text(message); 
+socket.on('new room member', function(username) {
+	$('#room-messages').append($('<li>').text(username + ' has entered the room'));
+	roomMembers.push(username);
 });
 
-socket.on('lobby members', function(message){
-	console.log(message);
-	$('#lobby-members').text(message.members);
+socket.on('room members', function(roomMembers){
+	console.log(roomMembers);
+	$('#room-members').text(roomMembers);
 });
 
-socket.on('gamerooms', function(message){
-	console.log("game rooms:" + message);
+socket.on('lobby members', function(members){
+	console.log(members);
+	$('#lobby-members').text(members);
+});
+
+socket.on('gamerooms', function(rooms){
+	console.log("game rooms:" + rooms);
 	$("#gamerooms").empty();
-	for (var i = 0 ; i < message.length; i++ ) {
-		$('#gamerooms').append($('<li>').text(message[i]));
+	for (var i = 0 ; i < rooms.length; i++ ) {
+		$('#gamerooms').append($('<li>').text(rooms[i]));
 	}
 });
 
-socket.on('members ready', function(message) {
+socket.on('members ready in room', function(readyMembers) {
 	console.log("members ready:");
-	console.log(message);
+	console.log(readyMembers);
 	$("#room-members-ready").empty();
-	for (var i = 0 ; i < message.length; i++ ) {
-		$('#room-members-ready').append($('<li>').text(message[i]+' ready'));
+	for (var i = 0 ; i < readyMembers.length; i++ ) {
+		$('#room-members-ready').append($('<li>').text(readyMembers[i]+' ready'));
 	}
 });
 
-socket.on('disconnected', function(messages){
-	console.log('DISCONNECTED ');
-	$('#lobby-messages').text(messages.id + " disconnected");
+socket.on('lobby member disconnected', function(disconnectedID){
+	console.log('DISCONNECTED FROM LOBBY');
+	$('#lobby-messages').append($('<li>').text(disconnectedID + " left the lobby"));
+
+});
+
+socket.on('room member disconnected', function(disconnectedID){
+	console.log('DISCONNECTED FROM ROOM');
+	$('#room-messages').append($('<li>').text(disconnectedID + " left the room"));
 });
 
 function birdUpdates(state){
