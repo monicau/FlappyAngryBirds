@@ -1,3 +1,5 @@
+var MAX_LENGTH_OF_LOG = 10;
+
 $(document).ready(function() {
 	// Hide game room div at the start
 	$("#invalid-username-alert").hide();
@@ -37,11 +39,19 @@ socket.on('username valid', function(){
 
 socket.on('new lobby member', function(username){
 	console.log(username + ' has entered room');
-	$('#lobby-messages').append($('<li>').text(username + ' entered the lobby'));
+	var messages = $('#lobby-messages');
+	if($("#lobby-messages li").length >= MAX_LENGTH_OF_LOG){
+		messages.children()[0].remove();
+	}
+	messages.append($('<li>').text(username + ' entered the lobby'));
 });
 
 socket.on('new room member', function(username) {
-	$('#room-messages').append($('<li>').text(username + ' entered the room'));
+	var messages = $('#room-messages');
+	if($("#room-messages li").length >= MAX_LENGTH_OF_LOG){
+		messages.children()[0].remove();
+	}
+	messages.append($('<li>').text(username + ' entered the room'));
 	roomMembers.push(username);
 });
 
@@ -58,7 +68,8 @@ socket.on('lobby members', function(members){
 	$('#lobby-members').empty();
 	for (var i = 0 ; i < members.length; i++ ) {
 		$('#lobby-members').append($('<li>').text(members[i]));
-	}});
+	}
+});
 
 socket.on('gamerooms', function(rooms){
 	console.log("game rooms:" + rooms);
