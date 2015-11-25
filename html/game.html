@@ -5,6 +5,11 @@
 	<title>Flappy!</title>
 	<script type="text/javascript" src="js/phaser.min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/game.js"></script>
+	<script>
+		game.state.add('main', mainState);
+		game.state.start('main');
+	</script>
 </head>
 <body>
 	<div id="game"></div>

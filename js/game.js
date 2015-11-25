@@ -1,7 +1,7 @@
 // http://blog.lessmilk.com/how-to-make-flappy-bird-in-html5-1/
 // Create new game
 var game = new Phaser.Game(500, 500, Phaser.AUTO, 'game');
-var isBoss = false;
+var isBoss = true;
 var birds = [];
 
 // Create main state
@@ -22,6 +22,7 @@ var mainState = {
 
 		// Display bird
 		this.bird = this.game.add.sprite(100, 245, 'bird');
+		birds.push(this.bird);
 
 		// Add gravity to bird
 		game.physics.arcade.enable(this.bird);
@@ -67,6 +68,7 @@ var mainState = {
 		if (isBoss) {
 			// Do collision detection
 			for(var i = 0; i<birds.length; i++){
+				bird = birds[i];
 				// check pipes
 				game.physics.arcade.overlap(bird, this.pipes, this.hitPipe, null, this);
 				// check bird hit bird
@@ -144,4 +146,3 @@ var mainState = {
 	},
 
 };
-

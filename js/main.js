@@ -122,8 +122,12 @@ socket.on('gamePort', function(portNum) {
 		birds = message.players;
 		$("#game").show();
 		// Add main state to game
+		window.setTimeout(startGame, 5000);
+	});
+
+	function startGame(){
 		game.state.add('main', mainState);
 		game.state.start('main');
-	});
+	}
 });
 		

@@ -22,6 +22,10 @@ app.get('/', function(req, res){
   res.sendFile(__dirname+'/html/index.html');
 });
 
+app.get('/game', function(req, res){
+	res.sendFile(__dirname+'/html/game.html');
+});
+
 var lobby_members = [];
 var gamerooms = []; // list of created rooms
 var ready_members_per_room = {}; //key: room name, value: list of ready players
