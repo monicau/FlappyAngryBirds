@@ -1,7 +1,6 @@
 // http://blog.lessmilk.com/how-to-make-flappy-bird-in-html5-1/
 // Create new game
 var game = new Phaser.Game(500, 500, Phaser.AUTO, 'game');
-var isBoss = true;
 
 // Create main state
 var mainState = {
@@ -76,7 +75,7 @@ var mainState = {
 		// Restart game if bird falls out of the screen
 		if (this.bird.inWorld == false) this.crippleBird();
 
-		if (isBoss) {
+		if (this.isBoss) {
 			// Do collision detection
 			for(id in this.birds){
 				var bird = this.birds[id] ;
@@ -106,37 +105,65 @@ var mainState = {
 		// Change angle of sprite to -20 degrees in 100 ms
 		animation.to({angle:-20}, 100);
 		animation.start();
+
+		if(!this.isBoss){
+			console.log("pleb jumping");
+			socketGame.emit('player action', {action:'jump', username: myUsername});
+		}
 	},
 
 	left: function(){
 		if (this.bird.alive == false) {
 			return;
 		}
-
-		console.log(this.bird.x);
 		this.bird.x -= 50;
+		if(!this.isBoss){
+			console.log("pleb lefting");
+			socketGame.emit('player action', {action:'left', username: myUsername});
+		}
 	},
 
 	right: function(){
 		if (this.bird.alive == false) {
 			return;
 		}
-
-		this.jumpSound.play();
-	console.log(this.bird.x);
 		this.bird.x += 50;
+		if(!this.isBoss){
+			console.log("pleb righting");
+			socketGame.emit('player action', {action:'right', username: myUsername});
+		}
 	},
 
 	otherBirdJump: function(id){
-		
+		if (this.birds[id].alive == false) {
+			return;
+		}
+
+		this.jumpSound.play();
+
+		this.birds[id].body.velocity.y = -350;
+
+		// Create animation
+		var animation = game.add.tween(this.birds[id]);
+		// Change angle of sprite to -20 degrees in 100 ms
+		animation.to({angle:-20}, 100);
+		animation.start();
+
+		console.log("other bird jumping");
 	},
 
 	otherBirdLeft: function(id){
-
+		if (this.birds[id].alive == false) {
+			return;
+		}
+		this.birds[id].x -= 50;
 	},
 
 	otherBirdRight: function(id){
-
+		if (this.birds[id].alive == false) {
+			return;
+		}
+		this.birds[id].x += 50;
 	},
 	restartGame: function() {
 		game.state.start('main');

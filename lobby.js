@@ -123,10 +123,11 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		// If everyone is ready, start the game
 		var members_of_room = io.nsps['/'].adapter.rooms[socket.current_room];
 		if(ready_members_per_room[socket.current_room].length == Object.keys(members_of_room).length){
-			console.log("Everyone ready, starting game server..");
+			console.log("Everyone ready, ing game server..");
 			var p = child_process.fork(__dirname + '/gameserver');
 			var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
-			p.send([portNum, members_of_room]);
+
+			p.send([portNum, members_of_room, socket_usernames]);
 			console.log("Emitting game port ");
 			io.sockets.in(socket.current_room).emit('gamePort', portNum);
 			p.on('message', function(message) {

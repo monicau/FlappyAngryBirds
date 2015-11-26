@@ -29,6 +29,7 @@ var last_state_sent_time = new Date().getTime();
 var threshold = 500;
 var birds = [];
 var myUsername;
+
 socket.on('username taken', function(){
 	$("#invalid-username-alert").show();
 });
@@ -91,6 +92,7 @@ socket.on('members ready in room', function(readyMembers) {
 	for (var i = 0 ; i < readyMembers.length; i++ ) {
 		$('#room-members-ready').append($('<li>').text(readyMembers[i]));
 	}
+
 });
 
 socket.on('lobby member disconnected', function(disconnectedID){
@@ -111,7 +113,7 @@ function birdUpdates(state){
 var socketGame;
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	socketGame = io.connect('http://localhost:' + portNum);
+	socketGame = io.connect('http://142.157.110.126:' + portNum);
 	
 	socketGame.on('message', function(message) {
 		console.log("Message from game.js: " + message);
@@ -119,31 +121,20 @@ socket.on('gamePort', function(portNum) {
 	});
 
 	socketGame.on('update', function(message){
+		console.log("Received new updated game");
 		// update the game state from the master client
-		game = message.game;
+		mainState = message;
 	});
-
-	socketGame.on('player movement', function(message){
-		// receive pleb client's movement
-		the_mover = message.id;
-		the_movement = message.movement;
-
-		// apply to state the player action
-
-
-		 var current = new Date().getTime();
-		 if(current - last_state_sent_time > threshold){
-		 	// send updates to clients
-
-		 	last_state_sent_time = current;
-		 }
-	});
-
-
 
 	socketGame.on('start', function(message){
 		console.log('game started');
-		birds = message.players;
+		mainState.usernames = message.players;
+		mainState.isBoss = message.boss == myUsername;
+		if(mainState.isBoss) console.log("I AM THE BOSS");
+		else {
+			console.log("I pleb");
+		}
+		console.log("start => "+ mainState.usernames);
 		$("#game").show();
 		// Add main state to game
 		window.setTimeout(startGame, 1000);
@@ -154,11 +145,42 @@ socket.on('gamePort', function(portNum) {
 		$("#div-room").show();
 	});
 
+	socketGame.on('pleb action', function(message){
+		console.log("received pleb action")
+		if(mainState.isBoss){
+			console.log("is boss and received pleb action "+message.action+" username "+message.username);
+			var player = message.username;
+			var action = message.action;
+			if(action == 'jump'){
+				mainState.otherBirdJump(player);
+			}
+			else if(action == 'right'){
+				mainState.otherBirdRight(player);
+			}
+			else if(action == 'left'){
+				mainState.otherBirdLeft(player);
+			}
+			var current = new Date().getTime();
+			if(current - last_state_sent_time > threshold){
+				// send updates to clients
+				// socketGame.emit('gameState', mainState);
+
+				// send positions of {username : birds_position}
+				// send positions of pipes
+				last_state_sent_time = current;
+			}
+		}
+	});
+
 	function startGame(){
 		game.state.add('main', mainState);
 		mainState.myID = myUsername;
 		mainState.birds = {};
-		mainState.birds[myUsername] = {};
+		for(var i = 0 ; i < mainState.usernames.length; i++){
+			mainState.birds[mainState.usernames[i]] = {};
+		}
+		console.log("Bird list => "+ JSON.stringify(mainState.birds));
+
 		game.state.start('main');
 	}
 });
