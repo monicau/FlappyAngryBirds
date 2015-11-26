@@ -78,13 +78,11 @@ var mainState = {
 
 		if (isBoss) {
 			// Do collision detection
-			for(var i = 0; i<birds.length; i++){
-				bird = birds[i];
-				// check pipes
+			for(id in this.birds){
+				var bird = this.birds[id] ;
 				game.physics.arcade.overlap(bird, this.pipes, this.hitPipe, null, this);
-				// check bird hit bird
-				// TODO
-			}
+
+			}		
 
 			birdUpdates();
 		}
@@ -115,7 +113,7 @@ var mainState = {
 			return;
 		}
 
-
+		console.log(this.bird.x);
 		this.bird.x -= 50;
 	},
 
@@ -125,7 +123,7 @@ var mainState = {
 		}
 
 		this.jumpSound.play();
-
+	console.log(this.bird.x);
 		this.bird.x += 50;
 	},
 
