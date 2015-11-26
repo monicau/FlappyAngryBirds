@@ -39,6 +39,7 @@ socket.on('username valid', function(username){
 	$("#div-lobby").show();
 	$("#div-join").show();
 	myUsername = username;
+	console.log("username valid: " + username);
 });
 
 socket.on('new lobby member', function(username){
@@ -156,7 +157,8 @@ socket.on('gamePort', function(portNum) {
 	function startGame(){
 		game.state.add('main', mainState);
 		mainState.myID = myUsername;
-		mainState.birds = {myUsername : {}};
+		mainState.birds = {};
+		mainState.birds[myUsername] = {};
 		game.state.start('main');
 	}
 });

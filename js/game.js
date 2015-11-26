@@ -30,6 +30,8 @@ var mainState = {
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
 
+			console.log("In game state, checking id: " + this.myID + " vs " + id);
+
 			if(this.myID == id){
 				this.bird = this.birds[id];
 			}
