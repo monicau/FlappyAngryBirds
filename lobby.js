@@ -60,7 +60,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			socket.emit("username taken");
 		}
 		else{
-			socket.emit('username valid');
+			socket.emit('username valid', username);
 			// Join lobby
 			lobby_members.push(username);
 			socket.join('lobby');
@@ -145,7 +145,7 @@ function removeMemberFromLobby(socket){
 
 	var index = lobby_members.indexOf(username);
 	lobby_members.splice(index, 1);
-
+  
 	console.log("New lobby members: " + JSON.stringify(lobby_members));
 	io.to('lobby').emit('lobby members', lobby_members);
 }

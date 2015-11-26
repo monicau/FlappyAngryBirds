@@ -2,7 +2,6 @@
 // Create new game
 var game = new Phaser.Game(500, 500, Phaser.AUTO, 'game');
 var isBoss = true;
-var birds = [];
 
 // Create main state
 var mainState = {
@@ -21,19 +20,29 @@ var mainState = {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
 		// Display bird
-		this.bird = this.game.add.sprite(100, 245, 'bird');
-		birds.push(this.bird);
+		for(id in this.birds){
+			this.birds[id] = this.game.add.sprite(100, 245, 'bird');		
 
-		// Add gravity to bird
-		game.physics.arcade.enable(this.bird);
-		this.bird.body.gravity.y = 1000;
+			// Add gravity to bird
+			game.physics.arcade.enable(this.birds[id]);
+			this.birds[id].body.gravity.y = 1000;
 
-		// Set anchor so that its animation rotates how we want
-		this.bird.anchor.setTo(-0.2, 0.5);
+			// Set anchor so that its animation rotates how we want
+			this.birds[id].anchor.setTo(-0.2, 0.5);	
 
-		// Key binding for jumping
+			if(this.myID == id){
+				this.bird = this.birds[id];
+			}
+		}		
+
+		// Key binding for jumping and dancing
 		var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		spaceKey.onDown.add(this.jump, this);
+
+		var leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+		var rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+		leftKey.onDown.add(this.left, this);
+		rightKey.onDown.add(this.right, this);
 
 		// Bind jumping sound to a variable
 		this.jumpSound = game.add.audio('jump');
@@ -99,6 +108,36 @@ var mainState = {
 		animation.start();
 	},
 
+	left: function(){
+		if (this.bird.alive == false) {
+			return;
+		}
+
+
+		this.bird.x -= 50;
+	},
+
+	right: function(){
+		if (this.bird.alive == false) {
+			return;
+		}
+
+		this.jumpSound.play();
+
+		this.bird.x += 50;
+	},
+
+	otherBirdJump: function(id){
+		
+	},
+
+	otherBirdLeft: function(id){
+
+	},
+
+	otherBirdRight: function(id){
+
+	},
 	restartGame: function() {
 		game.state.start('main');
 	},

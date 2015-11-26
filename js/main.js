@@ -25,16 +25,20 @@ function readyUp() {
 
 var socket = io();
 var roomMembers = [];
-
+var last_state_sent_time = new Date().getTime();
+var threshold = 500;
+var birds = [];
+var myUsername;
 socket.on('username taken', function(){
 	$("#invalid-username-alert").show();
 });
 
-socket.on('username valid', function(){
+socket.on('username valid', function(username){
 	$("#div-username").hide();
 	$("#invalid-username-alert").hide();
 	$("#div-lobby").show();
 	$("#div-join").show();
+	myUsername = username;
 });
 
 socket.on('new lobby member', function(username){
@@ -114,19 +118,45 @@ socket.on('gamePort', function(portNum) {
 	});
 
 	socketGame.on('update', function(message){
-		// update the game state
+		// update the game state from the master client
+		game = message.game;
 	});
+
+	socketGame.on('player movement', function(message){
+		// receive pleb client's movement
+		the_mover = message.id;
+		the_movement = message.movement;
+
+		// apply to state the player action
+
+
+		 var current = new Date().getTime();
+		 if(current - last_state_sent_time > threshold){
+		 	// send updates to clients
+
+		 	last_state_sent_time = current;
+		 }
+	});
+
+
 
 	socketGame.on('start', function(message){
 		console.log('game started');
 		birds = message.players;
 		$("#game").show();
 		// Add main state to game
-		window.setTimeout(startGame, 5000);
+		window.setTimeout(startGame, 1000);
+		$("#div-room").hide();
+	});
+
+	socketGame.on('gameEnded', function(message){
+		$("#div-room").show();
 	});
 
 	function startGame(){
 		game.state.add('main', mainState);
+		mainState.myID = myUsername;
+		mainState.birds = {myUsername : {}};
 		game.state.start('main');
 	}
 });
