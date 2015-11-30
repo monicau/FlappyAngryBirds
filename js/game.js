@@ -1,6 +1,7 @@
 // http://blog.lessmilk.com/how-to-make-flappy-bird-in-html5-1/
 // Create new game
 var game = new Phaser.Game(500, 500, Phaser.AUTO, 'game');
+var DEBUG = false;
 
 // Create main state
 var mainState = {
@@ -12,6 +13,7 @@ var mainState = {
 		game.load.image('bird', 'assets/bird.png');
 		game.load.image('pipe', 'assets/pipe.png');
 		game.load.audio('jump', 'assets/jump.wav');
+		game.stage.disableVisibilityChange = true;
 	},
 
 	create: function() {
@@ -24,7 +26,13 @@ var mainState = {
 
 			// Add gravity to bird
 			game.physics.arcade.enable(this.birds[id]);
-			this.birds[id].body.gravity.y = 1000;
+			if(DEBUG){
+				this.birds[id].body.gravity.y = 10;
+			}
+			else{
+				this.birds[id].body.gravity.y = 1000;
+			}
+
 
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
@@ -77,11 +85,12 @@ var mainState = {
 
 		if (this.isBoss) {
 			// Do collision detection
-			for(id in this.birds){
-				var bird = this.birds[id] ;
-				game.physics.arcade.overlap(bird, this.pipes, this.hitPipe, null, this);
-
-			}		
+			if(!DEBUG) {
+				for (id in this.birds) {
+					var bird = this.birds[id];
+					game.physics.arcade.overlap(bird, this.pipes, this.hitPipe, null, this);
+				}
+			}
 
 			birdUpdates();
 		}
@@ -108,7 +117,7 @@ var mainState = {
 
 		if(!this.isBoss){
 			console.log("pleb jumping");
-			socketGame.emit('player action', {action:'jump', username: myUsername});
+			socketGame.emit('player action', 'jump', myUsername);
 		}
 	},
 
@@ -119,7 +128,7 @@ var mainState = {
 		this.bird.x -= 50;
 		if(!this.isBoss){
 			console.log("pleb lefting");
-			socketGame.emit('player action', {action:'left', username: myUsername});
+			socketGame.emit('player action', 'left', myUsername);
 		}
 	},
 
@@ -130,7 +139,7 @@ var mainState = {
 		this.bird.x += 50;
 		if(!this.isBoss){
 			console.log("pleb righting");
-			socketGame.emit('player action', {action:'right', username: myUsername});
+			socketGame.emit('player action', 'right', myUsername);
 		}
 	},
 

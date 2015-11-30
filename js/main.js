@@ -30,7 +30,7 @@ var threshold = 500;
 var birds = [];
 var myUsername;
 
-socket.on('username taken', function(){
+socket.on('username invalid', function(){
 	$("#invalid-username-alert").show();
 });
 
@@ -86,8 +86,7 @@ socket.on('gamerooms', function(rooms){
 });
 
 socket.on('members ready in room', function(readyMembers) {
-	console.log("members ready:");
-	console.log(readyMembers);
+	console.log("members ready:" + readyMembers);
 	$("#room-members-ready").empty();
 	for (var i = 0 ; i < readyMembers.length; i++ ) {
 		$('#room-members-ready').append($('<li>').text(readyMembers[i]));
@@ -113,23 +112,19 @@ function birdUpdates(state){
 var socketGame;
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	socketGame = io.connect('http://142.157.110.126:' + portNum);
+	socketGame = io.connect('localhost:' + portNum);
 	
-	socketGame.on('message', function(message) {
-		console.log("Message from game.js: " + message);
-		isBoss = message.youRBoss;
-	});
-
-	socketGame.on('update', function(message){
+	socketGame.on('update', function(state){
 		console.log("Received new updated game");
 		// update the game state from the master client
-		mainState = message;
+		mainState = state;
 	});
 
-	socketGame.on('start', function(message){
+	socketGame.on('start', function(players, bossUsername){
 		console.log('game started');
-		mainState.usernames = message.players;
-		mainState.isBoss = message.boss == myUsername;
+		console.log("Players: " + players);
+		mainState.usernames = players;
+		mainState.isBoss = bossUsername == myUsername;
 		if(mainState.isBoss) console.log("I AM THE BOSS");
 		else {
 			console.log("I pleb");
@@ -141,24 +136,22 @@ socket.on('gamePort', function(portNum) {
 		$("#div-room").hide();
 	});
 
-	socketGame.on('gameEnded', function(message){
+	socketGame.on('gameEnded', function(){
 		$("#div-room").show();
 	});
 
-	socketGame.on('pleb action', function(message){
-		console.log("received pleb action")
+	socketGame.on('pleb action', function(action, username){
+		console.log("received pleb action");
 		if(mainState.isBoss){
-			console.log("is boss and received pleb action "+message.action+" username "+message.username);
-			var player = message.username;
-			var action = message.action;
+			console.log("is boss and received pleb action " + action + " username " + username);
 			if(action == 'jump'){
-				mainState.otherBirdJump(player);
+				mainState.otherBirdJump(username);
 			}
 			else if(action == 'right'){
-				mainState.otherBirdRight(player);
+				mainState.otherBirdRight(username);
 			}
 			else if(action == 'left'){
-				mainState.otherBirdLeft(player);
+				mainState.otherBirdLeft(username);
 			}
 			var current = new Date().getTime();
 			if(current - last_state_sent_time > threshold){

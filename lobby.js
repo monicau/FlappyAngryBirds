@@ -56,8 +56,8 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 	});
 
 	socket.on('new user', function(username) {
-		if(usernameTaken(username)){
-			socket.emit("username taken");
+		if(!username || usernameTaken(username)){
+			socket.emit("username invalid");
 		}
 		else{
 			socket.emit('username valid', username);
@@ -76,7 +76,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			console.log("Lobby members:" + JSON.stringify(socket_usernames));
 		}
 	});
-	
+
 	socket.on('join room', function(newRoom){
 		// if gameroom doesn't already exist, create it
 		if(gamerooms.indexOf(newRoom) == -1){
@@ -101,8 +101,8 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		io.to(socket.current_room).emit('room members', usernames_in_room);
 	});
 
-	
-	
+
+
 	socket.on('ready for game', function(){
 		// Add this socket to ready list, creating one if no list exists already or the list is empty
 		if (ready_members_per_room[socket.current_room] == null || ready_members_per_room[socket.current_room].length == 0) {
@@ -116,18 +116,17 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		gamerooms.splice(index, 1);
 		io.to('lobby').emit('gamerooms', gamerooms);
 
-
+		var ready_members_of_room = getReadyMembersInRoom(socket.current_room);
 		// Emit readied players
-		io.to(socket.current_room).emit('members ready in room', getReadyMembersInRoom(socket.current_room));
-
+		io.to(socket.current_room).emit('members ready in room', ready_members_of_room);
+		var members_of_room = getMembersInRoom(socket.current_room);
 		// If everyone is ready, start the game
-		var members_of_room = io.nsps['/'].adapter.rooms[socket.current_room];
-		if(ready_members_per_room[socket.current_room].length == Object.keys(members_of_room).length){
-			console.log("Everyone ready, ing game server..");
+		if(ready_members_per_room[socket.current_room].length == members_of_room.length){
+			console.log("Everyone ready, starting game server.");
 			var p = child_process.fork(__dirname + '/gameserver');
 			var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
 
-			p.send([portNum, members_of_room, socket_usernames]);
+			p.send([portNum, members_of_room]);
 			console.log("Emitting game port ");
 			io.sockets.in(socket.current_room).emit('gamePort', portNum);
 			p.on('message', function(message) {
@@ -146,7 +145,7 @@ function removeMemberFromLobby(socket){
 
 	var index = lobby_members.indexOf(username);
 	lobby_members.splice(index, 1);
-  
+
 	console.log("New lobby members: " + JSON.stringify(lobby_members));
 	io.to('lobby').emit('lobby members', lobby_members);
 }
@@ -171,14 +170,13 @@ function removeMemberFromRoom(socket, room){
 }
 
 function getMembersInRoom(room) {
-	members = io.nsps['/'].adapter.rooms[room];
+	var members = io.nsps['/'].adapter.rooms[room];
 	var usernames_in_room = [];
 	if(members){
 		var sockets_in_room = Object.keys(members);
 		if (sockets_in_room) {
 			for (var i = 0; i < sockets_in_room.length; i++) {
-				var socketID = sockets_in_room[i];
-				var username = socket_usernames[socketID];
+				var username = socket_usernames[sockets_in_room[i]];
 				if (username) {
 					usernames_in_room.push(username);
 				}
@@ -190,8 +188,10 @@ function getMembersInRoom(room) {
 
 function usernameTaken(username){
 	for(var key in socket_usernames){
-		if (socket_usernames[key] == username){
-			return true;
+		if(socket_usernames.hasOwnProperty(key)){
+			if (socket_usernames[key] == username){
+				return true;
+			}
 		}
 	}
 	return false;
@@ -200,9 +200,11 @@ function usernameTaken(username){
 function getReadyMembersInRoom(room){
 	var ready_sockets = ready_members_per_room[room];
 	var ready_usernames = [];
-	for(var i=0; i<ready_sockets.length; i++){
-		var ready_socket = ready_sockets[i];
-		ready_usernames.push(socket_usernames[ready_socket]);
+	if(ready_sockets){
+		for(var i=0; i<ready_sockets.length; i++){
+			var ready_socket = ready_sockets[i];
+			ready_usernames.push(socket_usernames[ready_socket]);
+		}
 	}
-	return ready_usernames
+	return ready_usernames;
 }
