@@ -120,7 +120,8 @@ socket.on('gamePort', function(portNum) {
 			mainState.birds[bird].x = state.xs[bird];
 			mainState.birds[bird].y = state.ys[bird];
 			mainState.birds[bird].angle = state.angles[bird];
-			mainState.birds[bird].body.velocity.y = state.velocities[bird];
+			mainState.birds[bird].alive = state.isAlive[bird];
+			if(mainState.birds[bird].body)  mainState.birds[bird].body.velocity.y = state.velocities[bird];
 		}
 	});
 
@@ -180,13 +181,15 @@ setInterval(function(){
 		var y = {};
 		var angles = {};
 		var velocity = {};
+		var alive = {};
 		for (var bird in mainState.birds){
 			x[bird] = mainState.birds[bird].x;
 			y[bird] = mainState.birds[bird].y;
 			angles[bird] = mainState.birds[bird].angle;
-			velocity[bird] = mainState.birds[bird].body.velocity.y;
+			alive[bird] = mainState.birds[bird].alive;
+			if(mainState.birds[bird].body) velocity[bird] = mainState.birds[bird].body.velocity.y;
 		}
-		var state = {xs:x, ys:y, angles:angles, velocities: velocity};
+		var state = {xs:x, ys:y, angles:angles, velocities: velocity, isAlive: alive};
 		gameSocket[0].emit('gameState', state);
 		// send positions of pipes
 	}

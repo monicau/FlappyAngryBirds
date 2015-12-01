@@ -88,11 +88,26 @@ var mainState = {
 			if(!DEBUG) {
 				for (id in this.birds) {
 					var bird = this.birds[id];
-					game.physics.arcade.overlap(bird, this.pipes, this.hitPipe, null, this);
+					game.physics.arcade.overlap(bird, this.pipes, this.hitPipe(bird), null, this);
 				}
 			}
 
 			birdUpdates();
+		}
+
+		var alive = false;
+		for (var b in this.birds){
+			alive |= this.birds[b].alive;
+		}
+		if(!alive){	// nobody's alive
+			console.log("Nobody's alive");
+			// Stop pipes from appearing
+			game.time.events.remove(this.timer);
+
+			// Go through all pipes and stop their movement
+			this.pipes.forEachAlive(function(p) {
+				p.body.velocity.x = 0;
+			}, this);	
 		}
 	},
 
@@ -205,19 +220,13 @@ var mainState = {
 		this.labelScore.text = this.score;
 	},
 
-	hitPipe: function() {
-		if (this.bird.alive == false) {
-			return;
-		}
-		this.bird.alive = false;
-		
-		// Stop pipes from appearing
-		game.time.events.remove(this.timer);
-
-		// Go through all pipes and stop their movement
-		this.pipes.forEachAlive(function(p) {
-			p.body.velocity.x = 0;
-		}, this);
+	hitPipe: function(bird) {
+		return function(){
+			if (bird.alive == false) {
+				return;
+			}
+			bird.alive = false;
+		};
 	},
 
 };
