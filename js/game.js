@@ -1,6 +1,6 @@
 // http://blog.lessmilk.com/how-to-make-flappy-bird-in-html5-1/
 // Create new game
-var game = new Phaser.Game(500, 500, Phaser.AUTO, 'game');
+var game = new Phaser.Game(790, 550, Phaser.AUTO, 'game');
 var DEBUG = false;
 
 // Create main state
@@ -59,7 +59,7 @@ var mainState = {
 		// Create a group of pipes, add physics
 		this.pipes = this.game.add.group();
 		this.pipes.enableBody = true;
-		this.pipes.createMultiple(20, 'pipe');
+		this.pipes.createMultiple(50, 'pipe');
 
 		// Create a timer for the pipes
 		this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
@@ -209,9 +209,9 @@ var mainState = {
 		var hole = Math.floor(Math.random() * 5) + 1;
 
 		// Add 6 pipes
-		for (var i=0; i<8; i++) {
-			if (i != hole && i != hole + 1) {
-				this.addOnePipe(500, i*60+10);
+		for (var i=0; i<10; i++) {
+			if (i != hole && i != hole + 1 && i != hole + 2) {
+				this.addOnePipe(790, i*60+10);
 			}
 		}
 
