@@ -24,7 +24,8 @@ var mainState = {
 
 		// Display bird
 		for(id in this.birds){
-			this.birds[id] = this.game.add.sprite(100, 245, 'bird');		
+			this.birds[id] = this.game.add.sprite(100, 245, 'bird');	
+			this.birds[id].tint = this.playerColours[id];
 
 			// Add gravity to bird
 			game.physics.arcade.enable(this.birds[id]);
@@ -37,7 +38,7 @@ var mainState = {
 
 			// Set start position
 			this.birds[id].y += count;
-			count += 300;
+			count += 50;
 
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
@@ -257,11 +258,11 @@ var mainState = {
 		console.log("Bird collision!");
 		return function() {
 			if (this.bird.y > otherBird.y) {
-				otherBird.body.velocity.y -= 90;
-				this.bird.body.velocity.y += 200;
+				otherBird.body.velocity.y -= 30;
+				this.bird.body.velocity.y += 50;
 			} else {
-				otherBird.body.velocity.y += 200;
-				this.bird.body.velocity.y -= 90;
+				otherBird.body.velocity.y += 50;
+				this.bird.body.velocity.y -= 30;
 			}
 		}
 	}

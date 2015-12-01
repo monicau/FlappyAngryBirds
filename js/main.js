@@ -127,12 +127,15 @@ socket.on('gamePort', function(portNum) {
 		}
 	});
 
-	socketGame.on('start', function(players, bossUsername){
+	socketGame.on('start', function(players, bossUsername, playerColours){
 		console.log('game started');
 		console.log("Players: " + players);
 		mainState.usernames = players;
 		mainState.isBoss = bossUsername == myUsername;
-		if(mainState.isBoss) console.log("I AM THE BOSS");
+		mainState.playerColours = playerColours;
+		if(mainState.isBoss) {
+			console.log("I AM THE BOSS");
+		}
 		else {
 			console.log("I pleb");
 		}

@@ -28,7 +28,13 @@ io.on('connection', function(socket) {
 	process.send("game.js received client connection");
 	socket.join('game');
 	count++;
-	if(count == usernames.length)	io.to('game').emit('start', usernames, bossUsername);
+
+	var playerColours = {};
+	for (var user in usernames) {
+		playerColours[usernames[user]] = (Math.random() * 0xffffff);
+	}
+
+	if(count == usernames.length)	io.to('game').emit('start', usernames, bossUsername, playerColours);
 
 	socket.on('player name', function(username){
 		if(bossUsername == username){
