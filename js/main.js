@@ -119,7 +119,9 @@ socket.on('gamePort', function(portNum) {
 		for (var bird in mainState.birds){
 			mainState.birds[bird].x = state.xs[bird];
 			mainState.birds[bird].y = state.ys[bird];
-			mainState.birds[bird].angle = state.angles[bird];
+			console.log("bird from message " + bird + ": " + state.angles[bird] );
+			if(bird != myUsername) mainState.birds[bird].angle = state.angles[bird];
+			console.log("bird from game state" + bird + " : " + mainState.birds[bird]);
 			mainState.birds[bird].alive = state.isAlive[bird];
 			if(mainState.birds[bird].body)  mainState.birds[bird].body.velocity.y = state.velocities[bird];
 		}

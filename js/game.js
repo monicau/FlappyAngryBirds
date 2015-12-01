@@ -5,6 +5,7 @@ var DEBUG = false;
 
 // Create main state
 var mainState = {
+
 	preload: function() {
 		// Set background
 		game.stage.backgroundColor = '#71c5cf';
@@ -17,6 +18,7 @@ var mainState = {
 	},
 
 	create: function() {
+		var count = 1;
 		// Set up the physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -33,6 +35,9 @@ var mainState = {
 				this.birds[id].body.gravity.y = 1000;
 			}
 
+			// Set start position
+			this.birds[id].y += count;
+			count += 300;
 
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
@@ -76,8 +81,10 @@ var mainState = {
 
 
 		// Rotate bird over time
-		if (this.bird.angle < 20) {
-			this.bird.angle += 1;
+		for (var bird in this.birds) {
+			if (this.birds[bird].angle < 20) {
+				this.birds[bird].angle += 1;
+			}
 		}
 
 		// Restart game if bird falls out of the screen
@@ -86,9 +93,14 @@ var mainState = {
 		if (this.isBoss) {
 			// Do collision detection
 			if(!DEBUG) {
-				for (id in this.birds) {
+				for (var id in this.birds) {
 					var bird = this.birds[id];
 					game.physics.arcade.overlap(bird, this.pipes, this.hitPipe(bird), null, this);
+					for (var idOther in this.birds) {
+						if (id != idOther) {
+							game.physics.arcade.overlap(this.birds[id], this.birds[idOther], this.hitBird(this.birds[idOther]), null, this);
+						}
+					}
 				}
 			}
 
@@ -240,5 +252,18 @@ var mainState = {
 			bird.alive = false;
 		};
 	},
+
+	hitBird: function(otherBird) {
+		console.log("Bird collision!");
+		return function() {
+			if (this.bird.y > otherBird.y) {
+				otherBird.body.velocity.y -= 90;
+				this.bird.body.velocity.y += 200;
+			} else {
+				otherBird.body.velocity.y += 200;
+				this.bird.body.velocity.y -= 90;
+			}
+		}
+	}
 
 };

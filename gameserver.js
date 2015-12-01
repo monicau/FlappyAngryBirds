@@ -43,7 +43,7 @@ io.on('connection', function(socket) {
 		}
 	});
 	socket.on('gameState', function(state){
-		process.send("updating game states");
+		// process.send("updating game states");
 		socket.broadcast.to('game').emit('update', state);
 	});
 	socket.on('hole', function(hole){
