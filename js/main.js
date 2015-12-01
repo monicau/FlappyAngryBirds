@@ -112,7 +112,7 @@ function birdUpdates(state){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect('localhost:' + portNum);
+	var socketGame = io.connect('142.157.34.87:' + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(state){
 		// update the game state from the master client
@@ -162,6 +162,15 @@ socket.on('gamePort', function(portNum) {
 		}
 	});
 
+	socketGame.on('create pipes', function(hole){
+		mainState.addPipes(hole);
+	});
+
+	socketGame.on('update score', function(score){
+		mainState.score = score;
+		mainState.labelScore.text = score;
+	});
+
 	function startGame(){
 		game.state.add('main', mainState);
 		mainState.myID = myUsername;
@@ -177,6 +186,7 @@ socket.on('gamePort', function(portNum) {
 		
 setInterval(function(){
 	if(gameSocket[0] && mainState.isBoss){
+		// bird related data
 		var x = {};
 		var y = {};
 		var angles = {};
@@ -191,6 +201,5 @@ setInterval(function(){
 		}
 		var state = {xs:x, ys:y, angles:angles, velocities: velocity, isAlive: alive};
 		gameSocket[0].emit('gameState', state);
-		// send positions of pipes
 	}
 }, threshold);

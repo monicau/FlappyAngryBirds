@@ -204,20 +204,32 @@ var mainState = {
 		pipe.outOfBoundsKill = true;
 	},
 
-	addRowOfPipes: function() {
-		// Create a gap to fly through
-		var hole = Math.floor(Math.random() * 5) + 1;
-
-		// Add 6 pipes
-		for (var i=0; i<10; i++) {
-			if (i != hole && i != hole + 1 && i != hole + 2) {
-				this.addOnePipe(790, i*60+10);
+	addPipes: function(hole){
+		if(this.pipes){
+			// Add 6 pipes
+			for (var i=0; i<10; i++) {
+				if (i != hole && i != hole + 1 && i != hole + 2) {
+					this.addOnePipe(790, i*60+10);
+				}
 			}
 		}
+	},
 
-		// Increase score
-		this.score += 1;
-		this.labelScore.text = this.score;
+	addRowOfPipes: function() {
+		if(this.isBoss){
+			// random should only be performed on the master 
+			// Create a gap to fly through
+			var hole = Math.floor(Math.random() * 5) + 1;
+			gameSocket[0].emit('hole', hole);
+			// Increase score
+			this.score += 1;
+			this.labelScore.text = this.score;
+			gameSocket[0].emit('score', this.score);
+			this.addPipes(hole);
+		}
+		
+
+
 	},
 
 	hitPipe: function(bird) {

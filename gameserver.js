@@ -46,4 +46,12 @@ io.on('connection', function(socket) {
 		process.send("updating game states");
 		socket.broadcast.to('game').emit('update', state);
 	});
+	socket.on('hole', function(hole){
+		process.send("received hole location for pipe generation ("+hole+")");
+		socket.broadcast.to('game').emit('create pipes', hole);
+	});
+	socket.on('score', function(score){
+		process.send("received score ("+score+")");
+		socket.broadcast.to('game').emit('score', score);
+	});
 });
