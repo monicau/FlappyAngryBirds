@@ -117,7 +117,7 @@ var mainState = {
 
 		if(!this.isBoss){
 			console.log("pleb jumping");
-			socketGame.emit('player action', 'jump', myUsername);
+			gameSocket[0].emit('player action', 'jump', myUsername);
 		}
 	},
 
@@ -128,7 +128,7 @@ var mainState = {
 		this.bird.x -= 50;
 		if(!this.isBoss){
 			console.log("pleb lefting");
-			socketGame.emit('player action', 'left', myUsername);
+			gameSocket[0].emit('player action', 'left', myUsername);
 		}
 	},
 
@@ -139,7 +139,7 @@ var mainState = {
 		this.bird.x += 50;
 		if(!this.isBoss){
 			console.log("pleb righting");
-			socketGame.emit('player action', 'right', myUsername);
+			gameSocket[0].emit('player action', 'right', myUsername);
 		}
 	},
 

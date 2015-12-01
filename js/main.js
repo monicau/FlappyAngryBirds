@@ -26,7 +26,7 @@ function readyUp() {
 var socket = io();
 var roomMembers = [];
 var last_state_sent_time = new Date().getTime();
-var threshold = 500;
+var threshold = 20;
 var birds = [];
 var myUsername;
 
@@ -109,15 +109,19 @@ function birdUpdates(state){
 
 }
 
-var socketGame;
+var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	socketGame = io.connect('localhost:' + portNum);
-	
+	var socketGame = io.connect('192.168.9.103:' + portNum);
+	gameSocket[0] = socketGame;
 	socketGame.on('update', function(state){
-		console.log("Received new updated game");
 		// update the game state from the master client
-		mainState = state;
+		for (var bird in mainState.birds){
+			mainState.birds[bird].x = state.xs[bird];
+			mainState.birds[bird].y = state.ys[bird];
+			mainState.birds[bird].angle = state.angles[bird];
+			mainState.birds[bird].body.velocity.y = state.velocities[bird];
+		}
 	});
 
 	socketGame.on('start', function(players, bossUsername){
@@ -134,6 +138,7 @@ socket.on('gamePort', function(portNum) {
 		// Add main state to game
 		window.setTimeout(startGame, 1000);
 		$("#div-room").hide();
+
 	});
 
 	socketGame.on('gameEnded', function(){
@@ -153,15 +158,6 @@ socket.on('gamePort', function(portNum) {
 			else if(action == 'left'){
 				mainState.otherBirdLeft(username);
 			}
-			var current = new Date().getTime();
-			if(current - last_state_sent_time > threshold){
-				// send updates to clients
-				// socketGame.emit('gameState', mainState);
-
-				// send positions of {username : birds_position}
-				// send positions of pipes
-				last_state_sent_time = current;
-			}
 		}
 	});
 
@@ -178,3 +174,20 @@ socket.on('gamePort', function(portNum) {
 	}
 });
 		
+setInterval(function(){
+	if(gameSocket[0] && mainState.isBoss){
+		var x = {};
+		var y = {};
+		var angles = {};
+		var velocity = {};
+		for (var bird in mainState.birds){
+			x[bird] = mainState.birds[bird].x;
+			y[bird] = mainState.birds[bird].y;
+			angles[bird] = mainState.birds[bird].angle;
+			velocity[bird] = mainState.birds[bird].body.velocity.y;
+		}
+		var state = {xs:x, ys:y, angles:angles, velocities: velocity};
+		gameSocket[0].emit('gameState', state);
+		// send positions of pipes
+	}
+}, threshold);
