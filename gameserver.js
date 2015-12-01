@@ -52,6 +52,6 @@ io.on('connection', function(socket) {
 	});
 	socket.on('score', function(score){
 		process.send("received score ("+score+")");
-		socket.broadcast.to('game').emit('score', score);
+		socket.broadcast.to('game').emit('update score', score);
 	});
 });
