@@ -43,7 +43,7 @@ var mainState = {
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
 
-			console.log("In game state, checking id: " + this.myID + " vs " + id);
+			// console.log("In game state, checking id: " + this.myID + " vs " + id);
 
 			if(this.myID == id){
 				this.bird = this.birds[id];
@@ -113,7 +113,7 @@ var mainState = {
 			alive |= this.birds[b].alive;
 		}
 		if(!alive){	// nobody's alive
-			console.log("Nobody's alive");
+			// console.log("Nobody's alive");
 			// Stop pipes from appearing
 			game.time.events.remove(this.timer);
 
@@ -144,7 +144,7 @@ var mainState = {
 		animation.start();
 
 		if(!this.isBoss){
-			console.log("pleb jumping");
+			// console.log("pleb jumping");
 			gameSocket[0].emit('player action', 'jump', myUsername);
 		}
 	},
@@ -155,7 +155,7 @@ var mainState = {
 		}
 		this.bird.x -= 50;
 		if(!this.isBoss){
-			console.log("pleb lefting");
+			// console.log("pleb lefting");
 			gameSocket[0].emit('player action', 'left', myUsername);
 		}
 	},
@@ -166,7 +166,7 @@ var mainState = {
 		}
 		this.bird.x += 50;
 		if(!this.isBoss){
-			console.log("pleb righting");
+			// console.log("pleb righting");
 			gameSocket[0].emit('player action', 'right', myUsername);
 		}
 	},
@@ -186,7 +186,7 @@ var mainState = {
 		animation.to({angle:-20}, 100);
 		animation.start();
 
-		console.log("other bird jumping");
+		// console.log("other bird jumping");
 	},
 
 	otherBirdLeft: function(id){
@@ -255,7 +255,7 @@ var mainState = {
 	},
 
 	hitBird: function(otherBird) {
-		console.log("Bird collision!");
+		// console.log("Bird collision!");
 		return function() {
 			if (this.bird.y > otherBird.y) {
 				otherBird.body.velocity.y -= 30;

@@ -114,16 +114,16 @@ socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
 	var socketGame = io.connect('142.157.115.49:' + portNum);
 	gameSocket[0] = socketGame;
-	socketGame.on('update', function(state){
+	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
 		for (var bird in mainState.birds){
-			mainState.birds[bird].x = state.xs[bird];
-			mainState.birds[bird].y = state.ys[bird];
-			console.log("bird from message " + bird + ": " + state.angles[bird] );
-			if(bird != myUsername) mainState.birds[bird].angle = state.angles[bird];
-			console.log("bird from game state" + bird + " : " + mainState.birds[bird]);
-			mainState.birds[bird].alive = state.isAlive[bird];
-			if(mainState.birds[bird].body)  mainState.birds[bird].body.velocity.y = state.velocities[bird];
+			mainState.birds[bird].x = playerMap[bird].x;
+			mainState.birds[bird].y = playerMap[bird].y;
+			// console.log("bird from message " + bird + ": " + playerMap[bird].angles[bird] );
+			if(bird != myUsername) mainState.birds[bird].angle = playerMap[bird].angles;
+			// console.log("bird from game playerMap[bird]" + bird + " : " + mainState.birds[bird]);
+			mainState.birds[bird].alive = playerMap[bird].alive;
+			if(mainState.birds[bird].body)  mainState.birds[bird].body.velocity.y = playerMap[bird].velocity;
 		}
 	});
 
@@ -154,9 +154,9 @@ socket.on('gamePort', function(portNum) {
 
 
 	socketGame.on('pleb action', function(action, username){
-		console.log("received pleb action");
+		// console.log("received pleb action");
 		if(mainState.isBoss){
-			console.log("is boss and received pleb action " + action + " username " + username);
+			// console.log("is boss and received pleb action " + action + " username " + username);
 			if(action == 'jump'){
 				mainState.otherBirdJump(username);
 			}
@@ -190,26 +190,22 @@ function startGame(){
 	for(var i = 0 ; i < mainState.usernames.length; i++){
 		mainState.birds[mainState.usernames[i]] = {};
 	}
-	console.log("Bird list => "+ JSON.stringify(mainState.birds));
+	// console.log("Bird list => "+ JSON.stringify(mainState.birds));
 
 	game.state.start('main');
 }
 setInterval(function(){
 	if(gameSocket[0] && mainState.isBoss){
 		// bird related data
-		var x = {};
-		var y = {};
-		var angles = {};
-		var velocity = {};
-		var alive = {};
+		var playerMap = {};
 		for (var bird in mainState.birds){
-			x[bird] = mainState.birds[bird].x;
-			y[bird] = mainState.birds[bird].y;
-			angles[bird] = mainState.birds[bird].angle;
-			alive[bird] = mainState.birds[bird].alive;
-			if(mainState.birds[bird].body) velocity[bird] = mainState.birds[bird].body.velocity.y;
+			playerMap[bird] = {};
+			playerMap[bird].x = mainState.birds[bird].x;
+			playerMap[bird].y = mainState.birds[bird].y;
+			playerMap[bird].angles = mainState.birds[bird].angle;
+			playerMap[bird].alive = mainState.birds[bird].alive;
+			if(mainState.birds[bird].body) playerMap[bird].velocity = mainState.birds[bird].body.velocity.y;
 		}
-		var state = {xs:x, ys:y, angles:angles, velocities: velocity, isAlive: alive};
-		gameSocket[0].emit('gameState', state);
+		gameSocket[0].emit('gameState', playerMap);
 	}
 }, threshold);

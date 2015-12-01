@@ -42,22 +42,22 @@ io.on('connection', function(socket) {
 		}
 	});
 	socket.on('player action', function(action, username){
-		process.send("pleb action received ");
+		// process.send("pleb action received ");
 		if(!bossSocket){
-			process.send("pleb action processing");
+			// process.send("pleb action processing");
 			io.to('game').emit("pleb action", action, username);
 		}
 	});
-	socket.on('gameState', function(state){
+	socket.on('gameState', function(playerMap){
 		// process.send("updating game states");
-		socket.broadcast.to('game').emit('update', state);
+		socket.broadcast.to('game').emit('update', playerMap);
 	});
 	socket.on('hole', function(hole){
-		process.send("received hole location for pipe generation ("+hole+")");
+		// process.send("received hole location for pipe generation ("+hole+")");
 		socket.broadcast.to('game').emit('create pipes', hole);
 	});
 	socket.on('score', function(score){
-		process.send("received score ("+score+")");
+		// process.send("received score ("+score+")");
 		socket.broadcast.to('game').emit('update score', score);
 	});
 	socket.on('restart', function(){
