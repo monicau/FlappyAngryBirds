@@ -123,17 +123,25 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		// If everyone is ready, start the game
 		if(ready_members_per_room[socket.current_room].length == members_of_room.length){
 			console.log("Everyone ready, starting game server.");
-			var p = child_process.fork(__dirname + '/gameserver');
-			var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
+			var p = launchGameServer(members_of_room);
 
-			p.send([portNum, members_of_room]);
-			console.log("Emitting game port ");
-			io.sockets.in(socket.current_room).emit('gamePort', portNum);
-			p.on('message', function(message) {
-				console.log("CHILD SAID: " + message);
-			});
 		}
 	});
+	function launchGameServer(members_of_room) {
+		var p = child_process.fork(__dirname + '/gameserver');
+		var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
+		p.send([portNum, members_of_room]);
+		console.log("Emitting game port ");
+		io.sockets.in(socket.current_room).emit('gamePort', portNum);
+		p.on('message', function(message) {
+			console.log("CHILD SAID: " + message);
+			if (message.indexOf('restart') > -1) {
+				// Launch a new game server for the new game
+				return launchGameServer(members_of_room);
+			}
+		});
+		return p;
+	}
 	// console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
 });
 

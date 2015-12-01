@@ -54,4 +54,7 @@ io.on('connection', function(socket) {
 		process.send("received score ("+score+")");
 		socket.broadcast.to('game').emit('update score', score);
 	});
+	socket.on('restart', function(){
+		process.send("received restart request");
+	});
 });

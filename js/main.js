@@ -112,7 +112,7 @@ function birdUpdates(state){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect('142.157.34.87:' + portNum);
+	var socketGame = io.connect('142.157.115.49:' + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(state){
 		// update the game state from the master client
@@ -146,6 +146,8 @@ socket.on('gamePort', function(portNum) {
 		$("#div-room").show();
 	});
 
+
+
 	socketGame.on('pleb action', function(action, username){
 		console.log("received pleb action");
 		if(mainState.isBoss){
@@ -171,19 +173,22 @@ socket.on('gamePort', function(portNum) {
 		mainState.labelScore.text = score;
 	});
 
-	function startGame(){
-		game.state.add('main', mainState);
-		mainState.myID = myUsername;
-		mainState.birds = {};
-		for(var i = 0 ; i < mainState.usernames.length; i++){
-			mainState.birds[mainState.usernames[i]] = {};
-		}
-		console.log("Bird list => "+ JSON.stringify(mainState.birds));
 
-		game.state.start('main');
-	}
 });
-		
+function restartGame() {
+	gameSocket[0].emit('restart', '');
+}
+function startGame(){
+	game.state.add('main', mainState);
+	mainState.myID = myUsername;
+	mainState.birds = {};
+	for(var i = 0 ; i < mainState.usernames.length; i++){
+		mainState.birds[mainState.usernames[i]] = {};
+	}
+	console.log("Bird list => "+ JSON.stringify(mainState.birds));
+
+	game.state.start('main');
+}
 setInterval(function(){
 	if(gameSocket[0] && mainState.isBoss){
 		// bird related data
