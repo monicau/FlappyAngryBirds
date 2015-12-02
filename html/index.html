@@ -25,26 +25,31 @@
     <![endif]-->
   </head>
   <body>
-  <div class="jumbotron">
+  <div class="jumbotron" id="div-welcome">
 	  <h1>Welcome to our Flappy Bird game!</h1>
-	  <p>Here is some placeholder text informing the user about what to do.</p>
+	  <h2>Built by Emil, Monica, and Rudolf</h2><br/>
+	  <p>Enter your preferred username and join the lobby!</p>
   </div>
-  	<div id="div-username">
-  		<h1>What's your username?</h1>
+  <div class="container" id="div-username">
+  		<h1>What's your username?</h1><br/>
 		<input class="form-control" id="username" type="text" name="username" placeholder="Username" onkeydown="if (event.keyCode == 13) document.getElementById('usernameSubmit').click()"><br>
+	  <div class="buttonDiv">
 		<button id="usernameSubmit" class="btn btn-primary" onclick='newUser()'>Submit</button>
+	  </div>
 	</div>
-  <div id="invalid-username-alert" class="alert alert-danger" role="alert">
+  <div class="container" id="invalid-username-alert" class="alert alert-danger" role="alert">
 	  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 	  <span class="sr-only">Error:</span>
 	  Username invalid: already taken or empty. Please try again.
   </div>
-  	<div id="div-join">
+  	<div class="container" id="div-join">
   		<h1>Create or join a room</h1>
 	  	<input class="form-control" id="room name" type="text" name="room" placeholder="Room name" onkeydown="if (event.keyCode == 13) document.getElementById('roomnameSubmit').click()"><br>
+		<div class="buttonDiv">
 		<button id="roomnameSubmit" class="btn btn-primary" onclick='joinRoom()'>Create/Join</button>
+			</div>
 	</div>
-	<div id="div-lobby">
+	<div class="container" id="div-lobby">
 		<h2>Lobby</h2>
 		<div class="well">
 			<h4>Current members</h4>
@@ -57,7 +62,7 @@
 			<ul id="lobby-messages"></ul>
 		</div>
 	</div>
-	<div id="div-room">
+	<div class="container" id="div-room">
 		<h1>Game room</h1>
 		<div class="well">
 			<div class="row">
@@ -73,9 +78,11 @@
 					<ul id="room-members-ready"></ul>
 				</div>
 			</div>
-			<button id="btn-ready" class="btn btn-success" onclick='readyUp()'>Ready</button>
-			<button id="btn-leave" class="btn btn-success" onclick='leaveRoom()'>Leave room</button>
 		</div>
+		<div class="buttonDiv">
+		<button id="btn-ready" class="btn btn-success" onclick='readyUp()'>Ready</button>
+		<button id="btn-leave" class="btn btn-success" onclick='leaveRoom()'>Leave room</button>
+			</div>
 	</div>
 	<div id="game">
 		<button id="btn-restart-game" class="btn btn-success" onclick="restartGame()">Restart</button>

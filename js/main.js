@@ -39,6 +39,7 @@ var threshold = 20;
 var birds = [];
 var myUsername;
 
+
 socket.on('username invalid', function(){
 	$("#invalid-username-alert").show();
 });
@@ -47,6 +48,7 @@ socket.on('username valid', function(username){
 	socket.emit('request rooms');
 	$("#div-username").hide();
 	$("#invalid-username-alert").hide();
+	$("#div-welcome").hide();
 	$("#div-lobby").show();
 	$("#div-join").show();
 	myUsername = username;
