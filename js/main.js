@@ -23,6 +23,13 @@ function readyUp() {
 	$("#btn-ready").prop("disabled", true);
 }
 
+function leaveRoom(){
+	socket.emit('returned to lobby', myUsername);
+	$("#div-room").hide();
+	$("#div-join").show();
+	$("#div-lobby").show();
+}
+
 var socket = io();
 var roomMembers = [];
 var last_state_sent_time = new Date().getTime();
@@ -35,6 +42,7 @@ socket.on('username invalid', function(){
 });
 
 socket.on('username valid', function(username){
+	socket.emit('request rooms');
 	$("#div-username").hide();
 	$("#invalid-username-alert").hide();
 	$("#div-lobby").show();
@@ -112,7 +120,7 @@ function birdUpdates(state){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect('142.157.115.49:' + portNum);
+	var socketGame = io.connect('142.157.34.87:' + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client

@@ -67,7 +67,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			socket.current_room = 'lobby';
 			io.to('lobby').emit('new lobby member', username); // tell others about it
 
-			// If they aren't currently in socket_usernames, add them, and notify the loby members
+			// If they aren't currently in socket_usernames, add them, and notify the lobby members
 			if(!(socket.id in socket_usernames && socket_usernames[socket.id] === username)){
 				socket_usernames[socket.id] = username;
 				console.log("New user: username " + username + " with socket " + socket.id);
@@ -77,11 +77,42 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		}
 	});
 
+	socket.on('returned to lobby', function(username) {
+		var old_room = socket.current_room;
+		socket.leave(old_room);
+
+		// Join lobby
+		lobby_members.push(username);
+		socket.join('lobby');
+		socket.current_room = 'lobby';
+		io.to('lobby').emit('new lobby member', username); // tell others about it
+
+
+		if(getMembersInRoom(old_room).length ==  0){
+			var index = gamerooms.indexOf(old_room);
+			gamerooms.splice(index, 1);
+			io.to('lobby').emit('gamerooms', gamerooms);
+		}
+
+		if(old_room){
+			if(old_room == 'lobby'){
+				removeMemberFromLobby(socket);
+			}
+			else{
+				removeMemberFromRoom(socket, old_room);
+			}
+		}
+
+		io.to('lobby').emit('lobby members', lobby_members)
+		console.log("Lobby members:" + JSON.stringify(socket_usernames));
+	});
+
 	socket.on('join room', function(newRoom){
 		// if gameroom doesn't already exist, create it
 		if(gamerooms.indexOf(newRoom) == -1){
 			gamerooms.push(newRoom);
-
+			console.log("New game room:" + newRoom);
+			console.log("Rooms: " + JSON.stringify(gamerooms));
 			// Emit new game room to people in lobby
 			io.to('lobby').emit('gamerooms', gamerooms);
 		}
@@ -101,7 +132,9 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		io.to(socket.current_room).emit('room members', usernames_in_room);
 	});
 
-
+	socket.on('request rooms', function(){
+		io.to('lobby').emit('gamerooms', gamerooms);
+	});
 
 	socket.on('ready for game', function(){
 		// Add this socket to ready list, creating one if no list exists already or the list is empty
