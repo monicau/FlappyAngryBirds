@@ -14,6 +14,7 @@ var mainState = {
 		game.load.image('bird', 'assets/bird.png');
 		game.load.image('pipe', 'assets/pipe.png');
 		game.load.audio('jump', 'assets/jump.wav');
+		game.load.audio('death', 'assets/death.mp3');
 		game.stage.disableVisibilityChange = true;
 	},
 
@@ -125,6 +126,10 @@ var mainState = {
 	},
 
 	crippleBird: function() {
+		if(this.bird.alive){ // this check is necessary so that the sound doesn't play many times, which is incredibly painful. do not make my mistakes.
+			var death = game.add.audio('death');
+			death.play();
+		}
 		this.bird.alive = false;
 	},
 
@@ -251,6 +256,10 @@ var mainState = {
 				return;
 			}
 			bird.alive = false;
+			if (bird == this.bird){
+				var death = game.add.audio('death');
+				death.play();
+			}
 		};
 	},
 
