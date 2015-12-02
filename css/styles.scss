@@ -1,0 +1,82 @@
+.jumbotron {
+    width: 60%;
+    margin: auto;
+    padding: 2% 2%;
+    background-color: rgb(219,91,80);
+    border-style: solid;
+}
+
+
+
+.container{
+    width: 60%;
+    margin: auto;
+    padding: 3% 3%;
+    border-style: solid;
+    background-color: rgb(51,144,136);
+    text-align:center;
+}
+
+.well{
+    background-color: rgb(238,166,64);
+}
+
+body{
+    margin-top: 4%;
+    background-color: rgb(255,220,175);
+}
+
+#invalid-username-alert{
+    background-color: rgb(219,91,80);
+}
+
+.btn{
+    background-color: rgb(238,166,64);
+}
+
+.buttonDiv{
+    text-align:center;
+    border-style: none;
+    padding: 0 0;
+}
+
+#div-game{
+    text-align: center;
+    margin:auto;
+}
+
+div + div{
+    margin-top: 4%;
+
+}
+
+div + .container{
+    margin-top: 4%;
+}
+
+.container + .container{
+    margin-top: 4%;
+}
+
+/* COLORS:
+yellow:
+rgb(238,166,64);
+
+red:
+rgb(219,91,80);
+
+darkblue:
+rgb(51,144,136);
+
+black:
+rgb(49,48,44);
+
+beige:
+rgb(255,220,175);
+
+green:
+rgb(45,136,45);
+
+lightblue:
+rgb(3,234,255);
+*/

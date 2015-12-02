@@ -1,66 +1,63 @@
 .jumbotron {
-    width: 60%;
-    margin: auto;
-    padding: 2% 2%;
-    background-color: rgb(219,91,80);
-    border-style: solid;
-}
+  width: 60%;
+  margin: auto;
+  padding: 2% 2%;
+  background-color: #db5b50;
+  border-style: solid; }
 
+.container {
+  width: 60%;
+  margin: auto;
+  padding: 2% 2%;
+  border-style: solid;
+  background-color: #5e9732;
+  text-align: center; }
 
+.well {
+  border-style: solid;
+  background-color: #369ebb; }
 
-.container{
-    width: 60%;
-    margin: auto;
-    padding: 3% 3%;
-    border-style: solid;
-    background-color: rgb(51,144,136);
-}
+#div-join {
+  background-color: #db5b50; }
 
-body{
-    margin-top: 4%;
-    background-color: rgb(255,220,175);
-}
+.form-control {
+  text-align: center; }
 
-#invalid-username-alert{
-    background-color: rgb(219,91,80);
-}
+body {
+  margin-top: 4%;
+  background-color: #ffdcaf; }
 
-.btn{
-    background-color: rgb(238,166,64);
-}
+#invalid-username-alert {
+  background-color: #db5b50; }
 
-.buttonDiv{
-    text-align:center;
-    border-style: none;
-    padding: 0 0;
-}
+.btn {
+  background-color: #eea640; }
 
-div + div{
-    margin-top: 4%;
+.buttonDiv {
+  text-align: center;
+  border-style: none;
+  padding: 0 0; }
 
-}
+#div-game {
+  text-align: center;
+  margin: auto; }
 
-div + .container{
-    margin-top: 4%;
-}
+div + div {
+  margin-top: 4%; }
 
-.container + .container{
-    margin-top: 4%;
-}
+div + .container {
+  margin-top: 4%; }
 
-/* COLORS:
-yellow:
-rgb(238,166,64);
+.container + .container {
+  margin-top: 4%; }
 
-red:
-rgb(219,91,80);
+canvas {
+  display: block;
+  margin: auto; }
 
-blue:
-rgb(51,144,136);
+.form-control {
+  display: inline-block;
+  width: 400px;
+  text-align: center; }
 
-black:
-rgb(49,48,44);
-
-beige:
-rgb(255,220,175);
-*/
+/*# sourceMappingURL=styles.css.map */
