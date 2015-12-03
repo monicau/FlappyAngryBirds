@@ -21,7 +21,9 @@ var mainState = {
 	},
 
 	create: function() {
+		this.hasStarted = false;
 		var count = 1;
+
 		// Set up the physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -38,6 +40,7 @@ var mainState = {
 			else{
 				this.birds[id].body.gravity.y = 1000;
 			}
+			this.birds[id].body.gravity.y = 0;
 
 			// Set start position
 			this.birds[id].x += count;
@@ -79,12 +82,30 @@ var mainState = {
 		this.score = 0;
 		this.labelScore = game.add.text(20,20,"0", {font:"30px Arial", fill:"#ffffff"});
 
-		
+		// start counter 
+		this.start_counter = 180;
+		this.counter_label = game.add.text(150,20,"0", {font:"30px Arial", fill:"#ffffff"});
 	},
 
 	update: function() {
 		// This gets called 60 times per second
-
+		if(this.start_counter){
+			console.log(this.start_counter);
+			this.start_counter--;
+			this.counter_label.text = Math.round(this.start_counter/60);
+			// Go through all pipes and stop their movement
+			if(!this.start_counter){
+				console.log("Starting the game");
+				this.hasStarted = true;
+				// This is madness
+				for (var bird in this.birds) {
+					// This is SPARTAAAAAA *gravity sucks*
+					this.birds[bird].body.gravity.y = 1000;
+				}
+				this.counter_label.text = "";
+			}
+			return;
+		}
 
 		// Rotate bird over time
 		for (var bird in this.birds) {
@@ -137,7 +158,7 @@ var mainState = {
 	},
 
 	jump: function() {
-		if (this.bird.alive == false) {
+		if (this.bird.alive == false || !this.hasStarted) {
 			return;
 		}
 
@@ -158,10 +179,10 @@ var mainState = {
 	},
 
 	left: function(){
-		this.zoom.play();
-		if (this.bird.alive == false) {
+		if (this.bird.alive == false || !this.hasStarted) {
 			return;
 		}
+		this.zoom.play();
 		this.bird.x -= 50;
 		if(!this.isBoss){
 			// console.log("pleb lefting");
@@ -170,10 +191,10 @@ var mainState = {
 	},
 
 	right: function(){
-		this.zoom.play();
-		if (this.bird.alive == false) {
+		if (this.bird.alive == false || !this.hasStarted) {
 			return;
 		}
+		this.zoom.play();
 		this.bird.x += 50;
 		if(!this.isBoss){
 			// console.log("pleb righting");
@@ -219,12 +240,12 @@ var mainState = {
 	addOnePipe: function(x, y) {
 		// Grab a pipe 
 		var pipe = this.pipes.getFirstDead();
-		pipe.reset(x, y);
-		pipe.body.velocity.x = -200;
+			pipe.reset(x, y);
+			pipe.body.velocity.x = -200;
 
-		// Kill the pipe when it's no longer visible
-		pipe.checkWorldBounds = true;
-		pipe.outOfBoundsKill = true;
+			// Kill the pipe when it's no longer visible
+			pipe.checkWorldBounds = true;
+			pipe.outOfBoundsKill = true;
 	},
 
 	addPipes: function(hole){
@@ -239,7 +260,8 @@ var mainState = {
 	},
 
 	addRowOfPipes: function() {
-		if(this.isBoss){
+		if(this.isBoss && this.hasStarted){
+			console.log("Making pipe");
 			// random should only be performed on the master 
 			// Create a gap to fly through
 			var hole = Math.floor(Math.random() * 5) + 1;
@@ -250,9 +272,9 @@ var mainState = {
 			gameSocket[0].emit('score', this.score);
 			this.addPipes(hole);
 		}
-		
-
-
+		else{
+			console.log("Has started "+this.hasStarted + " is boss "+ this.isBoss);
+		}
 	},
 
 	hitPipe: function(bird) {

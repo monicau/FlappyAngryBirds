@@ -1,5 +1,6 @@
 var MAX_LENGTH_OF_LOG = 10;
 var LOCALHOST = 'localhost:';
+var OTHERIP = '142.157.110.44:';
 
 $(document).ready(function() {
 	// Hide game room div at the start
@@ -123,7 +124,7 @@ function birdUpdates(state){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect("142.157.113.103:" + portNum);
+	var socketGame = io.connect("localhost:" + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
