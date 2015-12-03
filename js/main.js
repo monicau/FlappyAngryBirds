@@ -1,6 +1,6 @@
 var MAX_LENGTH_OF_LOG = 10;
 var LOCALHOST = 'localhost:';
-var OTHERIP = '142.157.34.87:';
+var OTHERIP = '142.157.110.44:';
 
 $(document).ready(function() {
 	// Hide game room div at the start
