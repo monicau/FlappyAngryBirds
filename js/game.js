@@ -40,8 +40,8 @@ var mainState = {
 			}
 
 			// Set start position
-			this.birds[id].y += count;
-			count += 50;
+			this.birds[id].x += count;
+			count += 100;
 
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
@@ -64,6 +64,8 @@ var mainState = {
 
 		// Bind jumping sound to a variable
 		this.jumpSound = game.add.audio('jump');
+		this.death = game.add.audio('death');
+		this.zoom = game.add.audio('zoom');
 
 		// Create a group of pipes, add physics
 		this.pipes = this.game.add.group();
@@ -129,8 +131,7 @@ var mainState = {
 
 	crippleBird: function() {
 		if(this.bird.alive){ // this check is necessary so that the sound doesn't play many times, which is incredibly painful. do not make my mistakes.
-			var death = game.add.audio('death');
-			death.play();
+			this.death.play();
 		}
 		this.bird.alive = false;
 	},
@@ -157,8 +158,7 @@ var mainState = {
 	},
 
 	left: function(){
-		var zoom = game.add.audio('zoom');
-		zoom.play();
+		this.zoom.play();
 		if (this.bird.alive == false) {
 			return;
 		}
@@ -170,8 +170,7 @@ var mainState = {
 	},
 
 	right: function(){
-		var zoom = game.add.audio('zoom');
-		zoom.play();
+		this.zoom.play();
 		if (this.bird.alive == false) {
 			return;
 		}
@@ -263,8 +262,7 @@ var mainState = {
 			}
 			bird.alive = false;
 			if (bird == this.bird){
-				var death = game.add.audio('death');
-				death.play();
+				this.death.play();
 			}
 		};
 	},
