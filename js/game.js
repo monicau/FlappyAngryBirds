@@ -43,8 +43,8 @@ var mainState = {
 			this.birds[id].body.gravity.y = 0;
 
 			// Set start position
-			this.birds[id].y += count;
-			count += 50;
+			this.birds[id].x += count;
+			count += 100;
 
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
@@ -284,8 +284,7 @@ var mainState = {
 			}
 			bird.alive = false;
 			if (bird == this.bird){
-				var death = game.add.audio('death');
-				death.play();
+				this.death.play();
 			}
 		};
 	},
