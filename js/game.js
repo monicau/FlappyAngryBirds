@@ -96,13 +96,14 @@ var mainState = {
 			// Go through all pipes and stop their movement
 			if(!this.start_counter){
 				console.log("Starting the game");
-				this.hasStarted = true;
+				
 				// This is madness
 				for (var bird in this.birds) {
 					// This is SPARTAAAAAA *gravity sucks*
 					this.birds[bird].body.gravity.y = 1000;
 				}
 				this.counter_label.text = "";
+				this.hasStarted = true;
 			}
 			return;
 		}
