@@ -18,6 +18,7 @@ var usernames = [];
 var bossUsername;
 var bossSocket;
 var count = 0;
+var restart_requests = new Set();
 process.on('message', function(message) {
 	// process.send("hi i received your message");
 	port = message[0];
@@ -67,8 +68,13 @@ io.on('connection', function(socket) {
 		// process.send("received score ("+score+")");
 		socket.broadcast.to('game').emit('update score', score);
 	});
-	socket.on('restart', function(){
-		process.send("received restart request");
+	
+	socket.on('restart', function(user){
+		restart_requests.add(user);
+		process.send("Received re message from "+user+" length "+usernames.length + " vs size "+restart_requests.size);
+		if(restart_requests.size == usernames.length){
+			process.send("received restart request");
+		}
 	});
 });
 function getHighScores() {

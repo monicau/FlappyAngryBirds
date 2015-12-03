@@ -124,7 +124,7 @@ function birdUpdates(state){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect("localhost:" + portNum);
+	var socketGame = io.connect("142.157.110.44:" + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
@@ -193,7 +193,8 @@ socket.on('gamePort', function(portNum) {
 
 });
 function restartGame() {
-	gameSocket[0].emit('restart', '');
+	gameSocket[0].emit('restart', myUsername);
+	$('#btn-restart-game').prop('disabled', true);
 }
 function startGame(){
 	game.state.add('main', mainState);
