@@ -90,11 +90,14 @@ var mainState = {
 	update: function() {
 		// This gets called 60 times per second
 		if(this.start_counter){
-			console.log(this.start_counter);
+
 			this.start_counter--;
 			this.counter_label.text = Math.round(this.start_counter/60);
 			// Go through all pipes and stop their movement
 			if(!this.start_counter){
+
+				this.restartButton = false;
+
 				console.log("Starting the game");
 				
 				// This is madness
@@ -148,14 +151,18 @@ var mainState = {
 			this.pipes.forEachAlive(function(p) {
 				p.body.velocity.x = 0;
 			}, this);	
+			if(!this.restartButton) {
+				$('#btn-restart-game').prop('disabled', false);
+				this.restartButton = true;
+			}
 		}
 	},
 
 	crippleBird: function() {
+		this.bird.alive = false;
 		if(this.bird.alive){ // this check is necessary so that the sound doesn't play many times, which is incredibly painful. do not make my mistakes.
 			this.death.play();
 		}
-		this.bird.alive = false;
 	},
 
 	jump: function() {
@@ -272,9 +279,6 @@ var mainState = {
 			this.labelScore.text = this.score;
 			gameSocket[0].emit('score', this.score);
 			this.addPipes(hole);
-		}
-		else{
-			console.log("Has started "+this.hasStarted + " is boss "+ this.isBoss);
 		}
 	},
 
