@@ -8,7 +8,7 @@ $(document).ready(function() {
 	$("#div-join").hide();
 	$("#div-room").hide();
 	$("#div-lobby").hide();
-	$("#game").hide();
+	$("#div-game").hide();
 });
 function newUser() {
 	socket.emit('new user', document.getElementById('username').value);
@@ -152,7 +152,7 @@ socket.on('gamePort', function(portNum) {
 			console.log("I pleb");
 		}
 		console.log("start => "+ mainState.usernames);
-		$("#game").show();
+		$("#div-game").show();
 		// Add main state to game
 		window.setTimeout(startGame, 1000);
 		$("#div-room").hide();

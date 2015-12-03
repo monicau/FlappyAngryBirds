@@ -14,7 +14,9 @@ var mainState = {
 		game.load.image('bird', 'assets/bird.png');
 		game.load.image('pipe', 'assets/pipe.png');
 		game.load.audio('jump', 'assets/jump.wav');
-		game.load.audio('death', 'assets/death.mp3');
+		game.load.audio('death', 'assets/death.wav');
+		game.load.audio('zoom', 'assets/zoom.wav');
+
 		game.stage.disableVisibilityChange = true;
 	},
 
@@ -155,6 +157,8 @@ var mainState = {
 	},
 
 	left: function(){
+		var zoom = game.add.audio('zoom');
+		zoom.play();
 		if (this.bird.alive == false) {
 			return;
 		}
@@ -166,6 +170,8 @@ var mainState = {
 	},
 
 	right: function(){
+		var zoom = game.add.audio('zoom');
+		zoom.play();
 		if (this.bird.alive == false) {
 			return;
 		}

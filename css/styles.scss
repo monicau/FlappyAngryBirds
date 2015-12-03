@@ -1,37 +1,55 @@
+$red: rgb(219,91,80);
+$cyan: rgb(54, 158, 187);
+$blue: rgb(15, 146, 255);
+$yellow: rgb(238,166,64);
+$black: rgb(49,48,44);
+$beige: rgb(255,220,175);
+$green: rgb(94, 151, 50);
+$lightblue: rgb(3,234,255);
+$purple: rgb(88,42,114);
+
 .jumbotron {
     width: 60%;
     margin: auto;
     padding: 2% 2%;
-    background-color: rgb(219,91,80);
+    background-color: $red;
     border-style: solid;
 }
-
-
 
 .container{
     width: 60%;
     margin: auto;
-    padding: 3% 3%;
+    padding: 2% 2%;
     border-style: solid;
-    background-color: rgb(51,144,136);
+    background-color: $green;
     text-align:center;
 }
 
 .well{
-    background-color: rgb(238,166,64);
+    border-style: solid;
+    background-color: $cyan;
 }
+
+#div-join{
+    background-color: $red;
+}
+
+.form-control{
+    text-align:center;
+}
+
 
 body{
     margin-top: 4%;
-    background-color: rgb(255,220,175);
+    background-color: $beige;
 }
 
 #invalid-username-alert{
-    background-color: rgb(219,91,80);
+    background-color: $red;
 }
 
 .btn{
-    background-color: rgb(238,166,64);
+    background-color: $yellow;
 }
 
 .buttonDiv{
@@ -58,25 +76,13 @@ div + .container{
     margin-top: 4%;
 }
 
-/* COLORS:
-yellow:
-rgb(238,166,64);
+canvas {
+    display : block;
+    margin : auto;
+}
 
-red:
-rgb(219,91,80);
-
-darkblue:
-rgb(51,144,136);
-
-black:
-rgb(49,48,44);
-
-beige:
-rgb(255,220,175);
-
-green:
-rgb(45,136,45);
-
-lightblue:
-rgb(3,234,255);
-*/
+.form-control{
+    display: inline-block;
+    width:400px;
+    text-align: center;
+}
