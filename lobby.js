@@ -6,8 +6,23 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var child_process = require('child_process');
-
-
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+	host: 'localhost',
+	// port: 3306,
+	user: 'root',
+	password: 'superbirdbro',
+	database: 'cs307'
+})
+connection.connect();
+connection.query('select * from scoreboard', function(err, rows, fields) {
+	if (!err) {
+		console.log('database info:' + rows);
+	} else {
+		console.log(err);
+	}
+});
+connection.end;
 
 var port = 8080;
 http.listen(port, function(){
