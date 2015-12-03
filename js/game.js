@@ -23,7 +23,7 @@ var mainState = {
 	create: function() {
 		this.hasStarted = false;
 		var count = 1;
-
+		this.highScore= game.add.text(20,20,"", {font:"30px Arial", fill:"#333333"});
 		// Set up the physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -148,6 +148,7 @@ var mainState = {
 			this.pipes.forEachAlive(function(p) {
 				p.body.velocity.x = 0;
 			}, this);	
+			this.highScore.text = "hi im a high score";	
 		}
 	},
 

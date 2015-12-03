@@ -5,6 +5,13 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+	host: 'localhost',
+	user: 'root',
+	password: 'superbirdbro',
+	database: 'cs307'
+})
 
 var port;
 var usernames = [];
@@ -64,3 +71,17 @@ io.on('connection', function(socket) {
 		process.send("received restart request");
 	});
 });
+function getHighScores() {
+	connection.connect();
+	connection.query('select * from scoreboard', function(err, rows, fields) {
+		if (!err) {
+			for (var i=0; i<rows.length; i++) {
+				console.log(rows[i].username + " = " + rows[i].score);
+			}
+		} else {
+			console.log(err);
+		}
+	});
+	connection.end;
+	return rows;
+}
