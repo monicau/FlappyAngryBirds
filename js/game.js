@@ -21,9 +21,11 @@ var mainState = {
 	},
 
 	create: function() {
+		this.gameOver = false;
 		this.hasStarted = false;
 		var count = 1;
 		this.highScore= game.add.text(20,20,"", {font:"30px Arial", fill:"#333333"});
+		this.highScore.text = "";	
 		// Set up the physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -135,15 +137,16 @@ var mainState = {
 				}
 			}
 
-			birdUpdates();
 		}
 
 		var alive = false;
 		for (var b in this.birds){
 			alive |= this.birds[b].alive;
 		}
-		if(!alive){	// nobody's alive
-			// console.log("Nobody's alive");
+		if(!alive && !this.gameOver){	// nobody's alive
+			this.gameOver = true;
+
+			// console.log("Nobody's alive. GAME OVER!");
 			// Stop pipes from appearing
 			game.time.events.remove(this.timer);
 
@@ -151,11 +154,15 @@ var mainState = {
 			this.pipes.forEachAlive(function(p) {
 				p.body.velocity.x = 0;
 			}, this);	
-			this.highScore.text = "hi im a high score";	
+			
 			if(!this.restartButton) {
 				$('#btn-restart-game').prop('disabled', false);
 				this.restartButton = true;
 			}
+
+			// Display high score
+			
+			updateHighScore(this.myID, this.score);
 		}
 	},
 

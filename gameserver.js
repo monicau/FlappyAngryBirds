@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 	user: 'root',
 	password: 'superbirdbro',
 	database: 'cs307'
-})
+});
 
 var port;
 var usernames = [];
@@ -19,6 +19,24 @@ var bossUsername;
 var bossSocket;
 var count = 0;
 var restart_requests = new Set();
+
+function getHighScores(callback) {
+	connection.query('select * from scoreboard limit 10', function(err, rows, fields) {
+		if (err) throw (err);
+		callback(rows);	
+	});
+}
+function addHighScore(pUsername, pScore) {
+	var post = {
+		username: pUsername,
+		score: pScore
+	};
+	var query = connection.query('insert into scoreboard (username, score) values (\'' + pUsername + '\', ' + pScore + ') ', function(err, result) {
+		if (err) throw (err);
+	});
+	process.send(query.sql);
+}
+
 process.on('message', function(message) {
 	// process.send("hi i received your message");
 	port = message[0];
@@ -76,18 +94,14 @@ io.on('connection', function(socket) {
 			process.send("received restart request");
 		}
 	});
-});
-function getHighScores() {
-	connection.connect();
-	connection.query('select * from scoreboard', function(err, rows, fields) {
-		if (!err) {
-			for (var i=0; i<rows.length; i++) {
-				console.log(rows[i].username + " = " + rows[i].score);
-			}
-		} else {
-			console.log(err);
-		}
+
+	socket.on('get highscore', function(message) {
+		getHighScores(function(result) {
+			io.to('game').emit("high score", result);
+		});
 	});
-	connection.end;
-	return rows;
-}
+	socket.on('submit highscore', function(message) {
+		addHighScore(message[0], message[1]);
+	});
+});
+

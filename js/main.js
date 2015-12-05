@@ -1,6 +1,6 @@
 var MAX_LENGTH_OF_LOG = 10;
 var LOCALHOST = 'localhost:';
-var OTHERIP = '142.157.110.44:';
+var OTHERIP = '159.203.5.238:';
 
 $(document).ready(function() {
 	// Hide game room div at the start
@@ -38,7 +38,7 @@ var last_state_sent_time = new Date().getTime();
 var threshold = 20;
 var birds = [];
 var myUsername;
-
+var highscore;
 
 socket.on('username invalid', function(){
 	$("#invalid-username-alert").show();
@@ -117,14 +117,10 @@ socket.on('room member disconnected', function(disconnectedID){
 	$('#room-messages').append($('<li>').text(disconnectedID + " left the room"));
 });
 
-function birdUpdates(state){
-
-}
-
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect("142.157.110.44:" + portNum);
+	var socketGame = io.connect(OTHERIP + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
@@ -163,8 +159,6 @@ socket.on('gamePort', function(portNum) {
 		$("#div-room").show();
 	});
 
-
-
 	socketGame.on('pleb action', function(action, username){
 		// console.log("received pleb action");
 		if(mainState.isBoss){
@@ -190,8 +184,16 @@ socket.on('gamePort', function(portNum) {
 		mainState.labelScore.text = score;
 	});
 
-
+	socketGame.on('high score', function(message) {
+		console.log("received high score from server:" + message);
+		console.log(JSON.stringify(message));
+		for (var i=0; i<message.length; i++) {
+			console.log(message[i].username + " = " + message[i].score);
+			mainState.highScore.text += message[i].username + " = " + message[i].score + "\n";
+		}
+	});
 });
+
 function restartGame() {
 	gameSocket[0].emit('restart', myUsername);
 	$('#btn-restart-game').prop('disabled', true);
@@ -206,6 +208,12 @@ function startGame(){
 	// console.log("Bird list => "+ JSON.stringify(mainState.birds));
 
 	game.state.start('main');
+}
+function updateHighScore(username, score) {
+	if (username.length > 0) {
+		gameSocket[0].emit('submit highscore', [username, score]);
+	}
+	gameSocket[0].emit('get highscore', '');
 }
 setInterval(function(){
 	if(gameSocket[0] && mainState.isBoss){

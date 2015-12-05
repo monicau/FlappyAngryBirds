@@ -6,28 +6,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var child_process = require('child_process');
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: 'superbirdbro',
-	database: 'cs307'
-})
-function getHighScores() {
-	connection.connect();
-	connection.query('select * from scoreboard', function(err, rows, fields) {
-		if (!err) {
-			console.log('database info:' + rows);
-			for (var i=0; i<rows.length; i++) {
-				console.log(rows[i].username + " = " + rows[i].score);
-			}
-		} else {
-			console.log(err);
-		}
-	});
-	connection.end;
-	return rows;
-}
+
 var port = 8080;
 http.listen(port, function(){
   console.log('listening on *:'+port);
@@ -94,10 +73,6 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			}
 			console.log("Lobby members:" + JSON.stringify(socket_usernames));
 		}
-	});
-
-	socket.on('get highscore', function(message) {
-		io.to('lobby').emit('highscore', getHighScores());		
 	});
 
 	socket.on('returned to lobby', function(username) {
