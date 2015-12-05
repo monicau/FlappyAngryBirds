@@ -120,7 +120,7 @@ socket.on('room member disconnected', function(disconnectedID){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect(LOCALHOST + portNum);
+	var socketGame = io.connect(OTHERIP + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
@@ -189,11 +189,11 @@ socket.on('gamePort', function(portNum) {
 		console.log("received high score from server:" + message);
 		console.log(JSON.stringify(message));
 		for (var i=0; i<message.length; i++) {
-			console.log(message[i].username + " = " + message[i].score);
-			if (message[i].score == mainState.score) {
-				mainState.highScore.text += "*";
+			console.log(message[i].username + " vs me: " + mainState.myID);
+			if (message[i].score == mainState.score && message[i].username == mainState.myID) {
+				mainState.highScore.text += "*** ";
 				mainState.highScore.text += message[i].username + " ................. " + message[i].score;
-				mainState.highScore.text += "*";
+				mainState.highScore.text += " ***";
 			} else {
 				mainState.highScore.text += message[i].username + " ................. " + message[i].score;
 			}

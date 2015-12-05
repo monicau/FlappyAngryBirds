@@ -95,14 +95,17 @@ var mainState = {
 		this.scoreboard.anchor.set(0.5);
 		this.scoreboard.x = Math.floor(gameWidth/2);
 		this.scoreboard.y = Math.floor(gameHeight/2);
-		this.highScore= game.add.text(40,20,"", {font:"30px Arial", fill:"#333333"});
+		this.scoreboard.visible = false;
+		// this.scoreboard = this.game.add.text(0, 10, "", {font: "50px Bangers", fill:"#ff5050", align:"center"});
+		this.highScore= game.add.text(40,20,"", {font: "30px Bangers", fill:"#333333", align: "center"});
 		this.highScore.anchor.set(0.5);
 		this.highScore.x = Math.floor(this.scoreboard.x);
 		this.highScore.y = Math.floor(this.scoreboard.y);
 		this.highScore.text = "SCOREBOARD\n\n";	
-		this.scoreboard.visible = false;
 		this.highScore.visible = false;
 	},
+
+	
 
 	update: function() {
 		// This gets called 60 times per second
