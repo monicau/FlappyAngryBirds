@@ -192,10 +192,10 @@ socket.on('gamePort', function(portNum) {
 			console.log(message[i].username + " vs me: " + mainState.myID);
 			if (message[i].score == mainState.score && message[i].username == mainState.myID) {
 				mainState.highScore.text += "*** ";
-				mainState.highScore.text += message[i].username + " ................. " + message[i].score;
+				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score;
 				mainState.highScore.text += " ***";
 			} else {
-				mainState.highScore.text += message[i].username + " ................. " + message[i].score;
+				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score;
 			}
 			mainState.highScore.text += "\n";
 		}
@@ -218,7 +218,7 @@ function startGame(){
 	game.state.start('main');
 }
 function updateHighScore(username, score) {
-	if (username.length > 0) {
+	if (username.length > 0 && score > 0) {
 		gameSocket[0].emit('submit highscore', [username, score]);
 	}
 	gameSocket[0].emit('get highscore', '');

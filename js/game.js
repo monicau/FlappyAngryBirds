@@ -84,11 +84,14 @@ var mainState = {
 
 		// score
 		this.score = 0;
-		this.labelScore = game.add.text(20,20,"0", {font:"30px Arial", fill:"#ffffff"});
+		this.labelScore = game.add.text(20,20,"0 ", {font:"30px Bangers", fill:"#ffffff"});
 
 		// start counter 
 		this.start_counter = 180;
-		this.counter_label = game.add.text(150,20,"0", {font:"30px Arial", fill:"#ffffff"});
+		this.counter_label = game.add.text(20,20,"0 ", {font:"500px Bangers", fill:"#F3EFCF", align: "center"});
+		this.counter_label.anchor.set(0.5);
+		this.counter_label.x = Math.floor(gameWidth/2);
+		this.counter_label.y = Math.floor(gameHeight/2);
 
 		// set up scoreboard
 		this.scoreboard = this.game.add.sprite(25, 25, 'scoreboard');
@@ -96,7 +99,7 @@ var mainState = {
 		this.scoreboard.x = Math.floor(gameWidth/2);
 		this.scoreboard.y = Math.floor(gameHeight/2);
 		this.scoreboard.visible = false;
-		// this.scoreboard = this.game.add.text(0, 10, "", {font: "50px Bangers", fill:"#ff5050", align:"center"});
+
 		this.highScore= game.add.text(40,20,"", {font: "30px Bangers", fill:"#333333", align: "center"});
 		this.highScore.anchor.set(0.5);
 		this.highScore.x = Math.floor(this.scoreboard.x);
@@ -105,14 +108,18 @@ var mainState = {
 		this.highScore.visible = false;
 	},
 
-	
-
 	update: function() {
 		// This gets called 60 times per second
 		if(this.start_counter){
 
 			this.start_counter--;
-			this.counter_label.text = Math.round(this.start_counter/60);
+			var count = Math.round(this.start_counter/60);
+			if (count == 0) {
+				this.counter_label.text = " GO! ";
+			} else {
+				this.counter_label.text = " " + count + " ";
+			}
+			
 			// Go through all pipes and stop their movement
 			if(!this.start_counter){
 
@@ -303,7 +310,7 @@ var mainState = {
 			gameSocket[0].emit('hole', hole);
 			// Increase score
 			this.score += 1;
-			this.labelScore.text = this.score;
+			this.labelScore.text = this.score + " ";
 			gameSocket[0].emit('score', this.score);
 			this.addPipes(hole);
 		}
