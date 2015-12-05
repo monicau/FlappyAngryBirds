@@ -19,6 +19,13 @@ var bossUsername;
 var bossSocket;
 var count = 0;
 var restart_requests = new Set();
+var possibleColors = {'dark green': 0x5D68D9,
+	'light green': 0xB2F2ED,
+	'orange': 0xEDB227,
+	'yellow': 0xFFFF00,
+	'bright red': 0x9E0000,
+	'bright green': 0x00E300};
+var myColorName;
 
 function getHighScores(callback) {
 	connection.query('select * from scoreboard order by score desc limit 10', function(err, rows, fields) {
@@ -56,11 +63,20 @@ io.on('connection', function(socket) {
 	count++;
 
 	var playerColours = {};
+	var myColors = {};
 	for (var user in usernames) {
-		playerColours[usernames[user]] = (Math.random() * 0xffffff);
+		if (Object.keys(myColors).length == 0){
+			myColors = JSON.parse(JSON.stringify(possibleColors));
+		}
+		myColorName = Object.keys(myColors)[0];
+		var color = myColors[myColorName];
+		delete myColors[myColorName];
+		playerColours[usernames[user]] = color;
 	}
 
-	if(count == usernames.length)	io.to('game').emit('start', usernames, bossUsername, playerColours);
+	if(count == usernames.length)	{
+		io.to('game').emit('start', usernames, bossUsername, playerColours);
+	}
 
 	socket.on('player name', function(username){
 		if(bossUsername == username){

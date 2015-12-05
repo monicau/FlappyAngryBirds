@@ -10,6 +10,7 @@ $(document).ready(function() {
 	$("#div-lobby").hide();
 	$("#div-game").hide();
 });
+
 function newUser() {
 	socket.emit('new user', document.getElementById('username').value);
 }
@@ -119,7 +120,7 @@ socket.on('room member disconnected', function(disconnectedID){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect(OTHERIP + portNum);
+	var socketGame = io.connect(LOCALHOST + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
@@ -148,6 +149,7 @@ socket.on('gamePort', function(portNum) {
 		}
 		console.log("start => "+ mainState.usernames);
 		$("#div-game").show();
+		$("#div-colorbox").show();
 		// Add main state to game
 		window.setTimeout(startGame, 1000);
 		$("#div-room").hide();

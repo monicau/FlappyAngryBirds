@@ -1,3 +1,6 @@
+#invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game {
+  display: none; }
+
 .jumbotron {
   width: 60%;
   margin: auto;

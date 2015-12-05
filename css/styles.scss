@@ -8,6 +8,10 @@ $green: rgb(94, 151, 50);
 $lightblue: rgb(3,234,255);
 $purple: rgb(88,42,114);
 
+#invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game{
+    display: none;
+}
+
 .jumbotron {
     width: 60%;
     margin: auto;
