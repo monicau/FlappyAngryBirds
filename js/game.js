@@ -1,6 +1,8 @@
 // http://blog.lessmilk.com/how-to-make-flappy-bird-in-html5-1/
 // Create new game
-var game = new Phaser.Game(790, 550, Phaser.AUTO, 'game');
+var gameWidth = 790;
+var gameHeight = 550;
+var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'game');
 var DEBUG = false;
 
 // Create main state
@@ -13,6 +15,7 @@ var mainState = {
 		// Load game assets
 		game.load.image('bird', 'assets/bird.png');
 		game.load.image('pipe', 'assets/pipe.png');
+		game.load.image('scoreboard', 'assets/scoreboard.png');
 		game.load.audio('jump', 'assets/jump.wav');
 		game.load.audio('death', 'assets/death.wav');
 		game.load.audio('zoom', 'assets/zoom.wav');
@@ -24,8 +27,7 @@ var mainState = {
 		this.gameOver = false;
 		this.hasStarted = false;
 		var count = 1;
-		this.highScore= game.add.text(20,20,"", {font:"30px Arial", fill:"#333333"});
-		this.highScore.text = "";	
+
 		// Set up the physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -87,6 +89,19 @@ var mainState = {
 		// start counter 
 		this.start_counter = 180;
 		this.counter_label = game.add.text(150,20,"0", {font:"30px Arial", fill:"#ffffff"});
+
+		// set up scoreboard
+		this.scoreboard = this.game.add.sprite(25, 25, 'scoreboard');
+		this.scoreboard.anchor.set(0.5);
+		this.scoreboard.x = Math.floor(gameWidth/2);
+		this.scoreboard.y = Math.floor(gameHeight/2);
+		this.highScore= game.add.text(40,20,"", {font:"30px Arial", fill:"#333333"});
+		this.highScore.anchor.set(0.5);
+		this.highScore.x = Math.floor(this.scoreboard.x);
+		this.highScore.y = Math.floor(this.scoreboard.y);
+		this.highScore.text = "SCOREBOARD\n\n";	
+		this.scoreboard.visible = false;
+		this.highScore.visible = false;
 	},
 
 	update: function() {
@@ -161,8 +176,9 @@ var mainState = {
 			}
 
 			// Display high score
-			
 			updateHighScore(this.myID, this.score);
+			this.scoreboard.visible = true;
+			this.highScore.visible = true;
 		}
 	},
 

@@ -38,7 +38,6 @@ var last_state_sent_time = new Date().getTime();
 var threshold = 20;
 var birds = [];
 var myUsername;
-var highscore;
 
 socket.on('username invalid', function(){
 	$("#invalid-username-alert").show();
@@ -189,7 +188,14 @@ socket.on('gamePort', function(portNum) {
 		console.log(JSON.stringify(message));
 		for (var i=0; i<message.length; i++) {
 			console.log(message[i].username + " = " + message[i].score);
-			mainState.highScore.text += message[i].username + " = " + message[i].score + "\n";
+			if (message[i].score == mainState.score) {
+				mainState.highScore.text += "*";
+				mainState.highScore.text += message[i].username + " ................. " + message[i].score;
+				mainState.highScore.text += "*";
+			} else {
+				mainState.highScore.text += message[i].username + " ................. " + message[i].score;
+			}
+			mainState.highScore.text += "\n";
 		}
 	});
 });

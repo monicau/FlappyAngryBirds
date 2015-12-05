@@ -21,7 +21,7 @@ var count = 0;
 var restart_requests = new Set();
 
 function getHighScores(callback) {
-	connection.query('select * from scoreboard limit 10', function(err, rows, fields) {
+	connection.query('select * from scoreboard order by score desc limit 10', function(err, rows, fields) {
 		if (err) throw (err);
 		callback(rows);	
 	});
