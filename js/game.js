@@ -44,6 +44,11 @@ var mainState = {
 			} else {
 				this.birds[id] = this.game.add.sprite(100, 245, 'black_bird');
 			}
+			var style = {font:"30px Bangers", fill:"#ffffff"};
+			var truncatedId = id.substring(0,5) + " "; // truncate to 5 chars in case it's too long. add a space to avoid clipping issues
+			this.label_score = this.game.add.text(60, -80, truncatedId, style);
+			this.birds[id].addChild(this.label_score);
+
 			var flap = this.birds[id].animations.add('flap');
 			this.birds[id].animations.play('flap', 5, true);
 			// this.birds[id].tint = this.playerColours[id];
@@ -117,7 +122,7 @@ var mainState = {
 		this.highScore.anchor.set(0.5);
 		this.highScore.x = Math.floor(this.scoreboard.x);
 		this.highScore.y = Math.floor(this.scoreboard.y);
-		this.highScore.text = "SCOREBOARD\n\n";	
+		this.highScore.text = "SCOREBOARD \n\n";
 		this.highScore.visible = false;
 	},
 
