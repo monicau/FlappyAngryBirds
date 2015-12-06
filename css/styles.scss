@@ -7,6 +7,7 @@ $beige: rgb(255, 220, 175);
 $green: rgb(94, 151, 50);
 $lightblue: rgb(3, 234, 255);
 $purple: rgb(88, 42, 114);
+$white: rgb(255,255,255);
 
 #preload-font {
   font-family: 'Bangers', cursive;
@@ -18,11 +19,15 @@ $purple: rgb(88, 42, 114);
   display: none;
 }
 
+#div-welcome {
+  background: url('../assets/header.jpg') cover;
+}
+
 .container, .jumbotron {
   width: 60%;
-  margin: auto;
+  margin: 2% auto;
   padding: 2% 2%;
-  border-style: solid;
+  border: 10px solid $black;
   text-align: center;
   height: auto;
 }
@@ -31,13 +36,27 @@ $purple: rgb(88, 42, 114);
   text-align: center;
   display: inline-block;
   width: 50%;
+  background-color: $white;
+  border: 5px solid $blue;
+  border-radius: 0;
+  padding: 5px;
+  height: 60px;
+  font-family: "Bangers";
+  font-size: 25px;
+  color: $black;
 }
 
 body {
-  margin-top: 4%;
   background-color: $beige;
 }
 
+h1, h2, h3 {
+  font-family: 'Bangers', cursive;
+}
+
+h1 {
+  color: $white;
+}
 .jumbotron, #div-join {
   background-color: $red;
 }
@@ -55,13 +74,76 @@ body {
 }
 
 .btn {
-  background-color: $yellow;
+  background-color: $beige;
+  font-family: 'Bangers', cursive;
+  font-size:25px;
+  border-radius:0;
+  border: 5px solid $yellow;
+  color:$red;
+  letter-spacing:1px;
 }
 
 .buttonDiv {
   text-align: center;
   border-style: none;
   padding: 0 0;
+}
+
+#div-welcome {
+  background: $cyan url('../assets/header.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  margin:0;
+  padding:10% 0;
+}
+
+#div-welcome h1 {
+  font-family: 'Bangers', cursive;
+  font-size: 50px;
+  color: $white;
+}
+
+#div-welcome h2 {
+  font-family: 'Bangers', cursive;
+  font-size: 27px;  
+  color:$black;
+}
+
+@media only screen and (min-width: 980px) {
+  #div-welcome h1 {
+    font-size: 70px;
+  }
+  #div-welcome h2 {
+  font-size: 37px;  
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  #div-welcome h1 {
+    font-size: 90px;
+  }
+  #div-welcome h2 {
+  font-size: 47px;  
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  #div-welcome h1 {
+    font-size: 100px;
+  }
+  #div-welcome h2 {
+  font-size: 57px;  
+  }
+}
+@media only screen and (min-width: 1700px) {
+  #div-welcome h1 {
+    font-size: 120px;
+  }
+  #div-welcome h2 {
+  font-size: 57px;  
+  }
 }
 
 #div-game {
@@ -76,7 +158,6 @@ canvas {
 
 div + div {
   margin-top: 4%;
-
 }
 
 div + .container {

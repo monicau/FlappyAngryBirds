@@ -6,22 +6,38 @@
 #invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game {
   display: none; }
 
+#div-welcome {
+  background: url("../assets/header.jpg") cover; }
+
 .container, .jumbotron {
   width: 60%;
-  margin: auto;
+  margin: 2% auto;
   padding: 2% 2%;
-  border-style: solid;
+  border: 10px solid #31302c;
   text-align: center;
   height: auto; }
 
 .form-control {
   text-align: center;
   display: inline-block;
-  width: 50%; }
+  width: 50%;
+  background-color: white;
+  border: 5px solid #0f92ff;
+  border-radius: 0;
+  padding: 5px;
+  height: 60px;
+  font-family: "Bangers";
+  font-size: 25px;
+  color: #31302c; }
 
 body {
-  margin-top: 4%;
   background-color: #ffdcaf; }
+
+h1, h2, h3 {
+  font-family: 'Bangers', cursive; }
+
+h1 {
+  color: white; }
 
 .jumbotron, #div-join {
   background-color: #db5b50; }
@@ -36,13 +52,62 @@ body {
   background-color: #db5b50; }
 
 .btn {
-  background-color: #eea640; }
+  background-color: #ffdcaf;
+  font-family: 'Bangers', cursive;
+  font-size: 25px;
+  border-radius: 0;
+  border: 5px solid #eea640;
+  color: #db5b50;
+  letter-spacing: 1px; }
 
 .buttonDiv {
   text-align: center;
   border-style: none;
   padding: 0 0; }
 
+#div-welcome {
+  background: #369ebb url("../assets/header.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  margin: 0;
+  padding: 10% 0; }
+
+#div-welcome h1 {
+  font-family: 'Bangers', cursive;
+  font-size: 50px;
+  color: white; }
+
+#div-welcome h2 {
+  font-family: 'Bangers', cursive;
+  font-size: 27px;
+  color: #31302c; }
+
+@media only screen and (min-width: 980px) {
+  #div-welcome h1 {
+    font-size: 70px; }
+
+  #div-welcome h2 {
+    font-size: 37px; } }
+@media only screen and (min-width: 1280px) {
+  #div-welcome h1 {
+    font-size: 90px; }
+
+  #div-welcome h2 {
+    font-size: 47px; } }
+@media only screen and (min-width: 1400px) {
+  #div-welcome h1 {
+    font-size: 100px; }
+
+  #div-welcome h2 {
+    font-size: 57px; } }
+@media only screen and (min-width: 1700px) {
+  #div-welcome h1 {
+    font-size: 120px; }
+
+  #div-welcome h2 {
+    font-size: 57px; } }
 #div-game {
   text-align: center;
   margin: auto; }
@@ -59,5 +124,3 @@ div + .container {
 
 .container + .container {
   margin-top: 4%; }
-
-/*# sourceMappingURL=styles.css.map */
