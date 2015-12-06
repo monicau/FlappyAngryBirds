@@ -120,7 +120,7 @@ socket.on('room member disconnected', function(disconnectedID){
 var gameSocket = [0];
 socket.on('gamePort', function(portNum) {
 	console.log("Trying to connect to game port: " + portNum);
-	var socketGame = io.connect(OTHERIP + portNum);
+	var socketGame = io.connect(LOCALHOST + portNum);
 	gameSocket[0] = socketGame;
 	socketGame.on('update', function(playerMap){
 		// update the game state from the master client
