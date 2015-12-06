@@ -15,6 +15,7 @@ var connection = mysql.createConnection({
 
 var port;
 var usernames = [];
+var birds = [];
 var bossUsername;
 var bossSocket;
 var count = 0;
@@ -49,6 +50,7 @@ process.on('message', function(message) {
 	// process.send("hi i received your message");
 	port = message[0];
 	usernames = message[1];
+	birds = message[2];
 
 	process.send("game server received " + JSON.stringify(usernames));
 	http.listen(port, function(){
@@ -76,7 +78,7 @@ io.on('connection', function(socket) {
 	}
 
 	if(count == usernames.length)	{
-		io.to('game').emit('start', usernames, bossUsername, playerColours);
+		io.to('game').emit('start', usernames, bossUsername, birds);
 	}
 
 	socket.on('player name', function(username){

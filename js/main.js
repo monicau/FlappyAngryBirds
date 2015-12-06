@@ -164,14 +164,15 @@ socket.on('gamePort', function(portNum) {
 		}
 	});
 
-	socketGame.on('start', function(players, bossUsername, playerColours){
+	socketGame.on('start', function(players, bossUsername, birdsChosen){
 		console.log('game started');
 		console.log("Players: " + players);
+		console.log("Birds: " + birdsChosen);
 		mainState.usernames = players;
 		mainState.isBoss = bossUsername == myUsername;
-		mainState.playerColours = playerColours;
+		mainState.birdType = birdsChosen;
 		if(mainState.isBoss) {
-			console.log("I AM THE BOSS");
+			// console.log("I AM THE BOSS");
 		}
 		else {
 			console.log("I pleb");
