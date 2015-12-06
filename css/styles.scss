@@ -5,6 +5,7 @@ $yellow: rgb(238, 166, 64);
 $black: rgb(49, 48, 44);
 $beige: rgb(255, 220, 175);
 $green: rgb(94, 151, 50);
+$palercyan: #53B9D5;
 $lightblue: rgb(3, 234, 255);
 $purple: rgb(88, 42, 114);
 $white: rgb(255,255,255);
@@ -24,7 +25,7 @@ $white: rgb(255,255,255);
 }
 
 .container, .jumbotron {
-  width: 60%;
+  width: 80%;
   margin: 2% auto;
   padding: 2% 2%;
   border: 10px solid $black;
@@ -35,7 +36,7 @@ $white: rgb(255,255,255);
 .form-control {
   text-align: center;
   display: inline-block;
-  width: 50%;
+  width: 70%;
   background-color: $white;
   border: 5px solid $blue;
   border-radius: 0;
@@ -50,12 +51,21 @@ body {
   background-color: $beige;
 }
 
+p {
+  color:$white;
+  font-size:17px;
+}
+
 h1, h2, h3 {
   font-family: 'Bangers', cursive;
 }
 
 h1 {
   color: $white;
+}
+#div-join h1, #div-room h1 {
+  font-size:60px;
+  padding-bottom:20px;
 }
 .jumbotron, #div-join {
   background-color: $red;
@@ -67,6 +77,12 @@ h1 {
 
 .well {
   background-color: $cyan;
+  border: 5px solid $black;
+  border-radius: 0;
+}
+
+hr {
+  border: 5px solid $palercyan;
 }
 
 #invalid-username-alert {
@@ -111,12 +127,25 @@ h1 {
   color:$black;
 }
 
+ul {
+  list-style-type: none;
+  font-size:20px;
+  padding:0;
+  color: $white;
+}
+
 @media only screen and (min-width: 980px) {
   #div-welcome h1 {
     font-size: 70px;
   }
   #div-welcome h2 {
   font-size: 37px;  
+  }
+  .container, .jumbotron {
+    width: 60%;
+  }
+  .form-control {
+    width: 50%;
   }
 }
 
@@ -146,6 +175,14 @@ h1 {
   }
 }
 
+#div-room {
+  background: $cyan;
+}
+#div-room .well {
+  background: $red;
+  min-height:150px;
+}
+
 #div-game {
   text-align: center;
   margin: auto;
@@ -157,7 +194,7 @@ canvas {
 }
 
 div + div {
-  margin-top: 4%;
+  margin-top: 0%;
 }
 
 div + .container {

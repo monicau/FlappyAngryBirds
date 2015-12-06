@@ -10,7 +10,7 @@
   background: url("../assets/header.jpg") cover; }
 
 .container, .jumbotron {
-  width: 60%;
+  width: 80%;
   margin: 2% auto;
   padding: 2% 2%;
   border: 10px solid #31302c;
@@ -20,7 +20,7 @@
 .form-control {
   text-align: center;
   display: inline-block;
-  width: 50%;
+  width: 70%;
   background-color: white;
   border: 5px solid #0f92ff;
   border-radius: 0;
@@ -33,11 +33,19 @@
 body {
   background-color: #ffdcaf; }
 
+p {
+  color: white;
+  font-size: 17px; }
+
 h1, h2, h3 {
   font-family: 'Bangers', cursive; }
 
 h1 {
   color: white; }
+
+#div-join h1, #div-room h1 {
+  font-size: 60px;
+  padding-bottom: 20px; }
 
 .jumbotron, #div-join {
   background-color: #db5b50; }
@@ -46,7 +54,12 @@ h1 {
   background-color: #5e9732; }
 
 .well {
-  background-color: #369ebb; }
+  background-color: #369ebb;
+  border: 5px solid #31302c;
+  border-radius: 0; }
+
+hr {
+  border: 5px solid #53b9d5; }
 
 #invalid-username-alert {
   background-color: #db5b50; }
@@ -84,12 +97,24 @@ h1 {
   font-size: 27px;
   color: #31302c; }
 
+ul {
+  list-style-type: none;
+  font-size: 20px;
+  padding: 0;
+  color: white; }
+
 @media only screen and (min-width: 980px) {
   #div-welcome h1 {
     font-size: 70px; }
 
   #div-welcome h2 {
-    font-size: 37px; } }
+    font-size: 37px; }
+
+  .container, .jumbotron {
+    width: 60%; }
+
+  .form-control {
+    width: 50%; } }
 @media only screen and (min-width: 1280px) {
   #div-welcome h1 {
     font-size: 90px; }
@@ -108,6 +133,13 @@ h1 {
 
   #div-welcome h2 {
     font-size: 57px; } }
+#div-room {
+  background: #369ebb; }
+
+#div-room .well {
+  background: #db5b50;
+  min-height: 150px; }
+
 #div-game {
   text-align: center;
   margin: auto; }
@@ -117,7 +149,7 @@ canvas {
   margin: auto; }
 
 div + div {
-  margin-top: 4%; }
+  margin-top: 0%; }
 
 div + .container {
   margin-top: 4%; }
