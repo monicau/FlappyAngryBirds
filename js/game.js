@@ -92,7 +92,7 @@ var mainState = {
 		this.labelScore = game.add.text(20,20,"0 ", {font:"30px Bangers", fill:"#ffffff"});
 
 		// start counter 
-		this.start_counter = 600;
+		this.start_counter = 180;
 		this.counter_label = game.add.text(20,20,"0 ", {font:"500px Bangers", fill:"#F3EFCF", align: "center"});
 		this.counter_label.anchor.set(0.5);
 		this.counter_label.x = Math.floor(gameWidth/2);
