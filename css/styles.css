@@ -1,40 +1,35 @@
 #preload-font {
   font-family: 'Bangers', cursive;
   text-indent: -9999px;
-  font-size: 0;
-}
+  font-size: 0; }
 
 #invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game {
   display: none; }
 
-.jumbotron {
-  width: 60%;
-  margin: auto;
-  padding: 2% 2%;
-  background-color: #db5b50;
-  border-style: solid; }
-
-.container {
+.container, .jumbotron {
   width: 60%;
   margin: auto;
   padding: 2% 2%;
   border-style: solid;
-  background-color: #5e9732;
   text-align: center; }
-
-.well {
-  border-style: solid;
-  background-color: #369ebb; }
-
-#div-join {
-  background-color: #db5b50; }
 
 .form-control {
-  text-align: center; }
+  text-align: center;
+  display: inline-block;
+  width: 400px; }
 
 body {
   margin-top: 4%;
   background-color: #ffdcaf; }
+
+.jumbotron, #div-join {
+  background-color: #db5b50; }
+
+.container {
+  background-color: #5e9732; }
+
+.well {
+  background-color: #369ebb; }
 
 #invalid-username-alert {
   background-color: #db5b50; }
@@ -51,6 +46,10 @@ body {
   text-align: center;
   margin: auto; }
 
+canvas {
+  display: block;
+  margin: auto; }
+
 div + div {
   margin-top: 4%; }
 
@@ -59,14 +58,5 @@ div + .container {
 
 .container + .container {
   margin-top: 4%; }
-
-canvas {
-  display: block;
-  margin: auto; }
-
-.form-control {
-  display: inline-block;
-  width: 400px;
-  text-align: center; }
 
 /*# sourceMappingURL=styles.css.map */

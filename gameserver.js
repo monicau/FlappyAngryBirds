@@ -19,10 +19,11 @@ var bossUsername;
 var bossSocket;
 var count = 0;
 var restart_requests = new Set();
-var possibleColors = {'dark green': 0x5D68D9,
+var possibleColors = {
 	'light green': 0xB2F2ED,
 	'orange': 0xEDB227,
 	'yellow': 0xFFFF00,
+	'dark green': 0x5D68D9,
 	'bright red': 0x9E0000,
 	'bright green': 0x00E300};
 var myColorName;

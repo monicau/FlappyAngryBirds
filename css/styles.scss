@@ -1,98 +1,87 @@
-$red: rgb(219,91,80);
+$red: rgb(219, 91, 80);
 $cyan: rgb(54, 158, 187);
 $blue: rgb(15, 146, 255);
-$yellow: rgb(238,166,64);
-$black: rgb(49,48,44);
-$beige: rgb(255,220,175);
+$yellow: rgb(238, 166, 64);
+$black: rgb(49, 48, 44);
+$beige: rgb(255, 220, 175);
 $green: rgb(94, 151, 50);
-$lightblue: rgb(3,234,255);
-$purple: rgb(88,42,114);
+$lightblue: rgb(3, 234, 255);
+$purple: rgb(88, 42, 114);
 
 #preload-font {
-    font-family: 'Bangers', cursive;
-    text-indent: -9999px;
-    font-size: 0;
+  font-family: 'Bangers', cursive;
+  text-indent: -9999px;
+  font-size: 0;
 }
 
-#invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game{
-    display: none;
+#invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game {
+  display: none;
 }
 
-.jumbotron {
-    width: 60%;
-    margin: auto;
-    padding: 2% 2%;
-    background-color: $red;
-    border-style: solid;
+.container, .jumbotron {
+  width: 60%;
+  margin: auto;
+  padding: 2% 2%;
+  border-style: solid;
+  text-align: center;
 }
 
-.container{
-    width: 60%;
-    margin: auto;
-    padding: 2% 2%;
-    border-style: solid;
-    background-color: $green;
-    text-align:center;
+.form-control {
+  text-align: center;
+  display: inline-block;
+  width: 400px;
 }
 
-.well{
-    border-style: solid;
-    background-color: $cyan;
+body {
+  margin-top: 4%;
+  background-color: $beige;
 }
 
-#div-join{
-    background-color: $red;
+.jumbotron, #div-join {
+  background-color: $red;
 }
 
-.form-control{
-    text-align:center;
+.container {
+  background-color: $green;
 }
 
-
-body{
-    margin-top: 4%;
-    background-color: $beige;
+.well {
+  background-color: $cyan;
 }
 
-#invalid-username-alert{
-    background-color: $red;
+#invalid-username-alert {
+  background-color: $red;
 }
 
-.btn{
-    background-color: $yellow;
+.btn {
+  background-color: $yellow;
 }
 
-.buttonDiv{
-    text-align:center;
-    border-style: none;
-    padding: 0 0;
+.buttonDiv {
+  text-align: center;
+  border-style: none;
+  padding: 0 0;
 }
 
-#div-game{
-    text-align: center;
-    margin:auto;
-}
-
-div + div{
-    margin-top: 4%;
-
-}
-
-div + .container{
-    margin-top: 4%;
-}
-
-.container + .container{
-    margin-top: 4%;
+#div-game {
+  text-align: center;
+  margin: auto;
 }
 
 canvas {
-    display : block;
-    margin : auto;
+  display: block;
+  margin: auto;
 }
 
-.form-control{
-    display: inline-block;
-    width:400px;
-    text-align: center;
+div + div {
+  margin-top: 4%;
+
+}
+
+div + .container {
+  margin-top: 4%;
+}
+
+.container + .container {
+  margin-top: 4%;
 }
