@@ -9,6 +9,7 @@ $(document).ready(function() {
 	$("#div-room").hide();
 	$("#div-lobby").hide();
 	$("#div-game").hide();
+	$("#btn-ready").prop("disabled", false);
 });
 
 function newUser() {

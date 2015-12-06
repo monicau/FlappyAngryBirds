@@ -19,9 +19,9 @@ var mainState = {
 		game.load.spritesheet('red_bird', 'assets/spritesheet_red.png', 119, 96, 3);
 		game.load.spritesheet('yellow_bird', 'assets/spritesheet_yellow.png', 127, 100, 3);
 		game.load.spritesheet('black_bird', 'assets/spritesheet_black.png', 125, 96, 3);
-		game.load.audio('jump', 'assets/jump.wav');
-		game.load.audio('death', 'assets/death.wav');
-		game.load.audio('zoom', 'assets/zoom.wav');
+		game.load.audio('jump', ['assets/jump.mp3', 'assets/jump.wav']);
+		game.load.audio('death', ['assets/death.mp3', 'assets/death.wav']);
+		game.load.audio('zoom', ['assets/zoom.mp3', 'assets/zoom.wav']);
 
 		game.stage.disableVisibilityChange = true;
 	},
@@ -198,10 +198,10 @@ var mainState = {
 	},
 
 	crippleBird: function() {
-		this.bird.alive = false;
 		if(this.bird.alive){ // this check is necessary so that the sound doesn't play many times, which is incredibly painful. do not make my mistakes.
 			this.death.play();
 		}
+		this.bird.alive = false;
 	},
 
 	jump: function() {
