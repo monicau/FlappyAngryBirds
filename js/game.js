@@ -16,6 +16,9 @@ var mainState = {
 		game.load.image('bird', 'assets/bird.png');
 		game.load.image('pipe', 'assets/pipe.png');
 		game.load.image('scoreboard', 'assets/scoreboard.png');
+		game.load.spritesheet('red_bird', 'assets/spritesheet_red.png', 119, 96, 3);
+		game.load.spritesheet('yellow_bird', 'assets/spritesheet_yellow.png', 127, 100, 3);
+		game.load.spritesheet('black_bird', 'assets/spritesheet_black.png', 125, 96, 3);
 		game.load.audio('jump', 'assets/jump.wav');
 		game.load.audio('death', 'assets/death.wav');
 		game.load.audio('zoom', 'assets/zoom.wav');
@@ -33,8 +36,10 @@ var mainState = {
 
 		// Display bird
 		for(id in this.birds){
-			this.birds[id] = this.game.add.sprite(100, 245, 'bird');	
-			this.birds[id].tint = this.playerColours[id];
+			this.birds[id] = this.game.add.sprite(100, 245, 'red_bird');
+			var flap = this.birds[id].animations.add('flap');
+			this.birds[id].animations.play('flap', 5, true);
+			// this.birds[id].tint = this.playerColours[id];
 
 			// Add gravity to bird
 			game.physics.arcade.enable(this.birds[id]);
