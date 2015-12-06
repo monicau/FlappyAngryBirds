@@ -167,3 +167,15 @@ div + .container {
 .container + .container {
   margin-top: 4%;
 }
+
+.character_box {
+  display:inline;
+}
+.player_selection_button {
+  display:inline;
+}
+#nextPlayerArrow, #previousPlayerArrow {
+  background: none;
+  border:0;
+  padding:0 20px;
+}

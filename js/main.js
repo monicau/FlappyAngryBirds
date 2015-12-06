@@ -2,6 +2,9 @@ var MAX_LENGTH_OF_LOG = 10;
 var LOCALHOST = 'localhost:';
 var OTHERIP = '159.203.5.238:';
 
+var bird_divs;
+var player_selection;
+
 $(document).ready(function() {
 	// Hide game room div at the start
 	$("#invalid-username-alert").hide();
@@ -10,10 +13,31 @@ $(document).ready(function() {
 	$("#div-lobby").hide();
 	$("#div-game").hide();
 	$("#btn-ready").prop("disabled", false);
+
+	/* Player selection */
+	bird_divs = [ $("#player_1"), $("#player_2"), $("#player_3") ];
+	bird_radiobuttons = [ $("#radio_1"), $("#radio_2"), $("#radio_3")];
+	player_selection = 0;
+	bird_divs[1].hide();
+	bird_divs[2].hide();
+
 });
 
+function nextPlayer() {
+	bird_divs[player_selection].hide();
+	player_selection = (player_selection + 1) % 3;
+	bird_divs[player_selection].show();
+}
+
+function previousPlayer() {
+	bird_divs[player_selection].hide();
+	player_selection = (player_selection + 2) % 3;
+	console.log("next player to display: " + player_selection);
+	bird_divs[player_selection].show();
+}
+
 function newUser() {
-	socket.emit('new user', document.getElementById('username').value);
+	socket.emit('new user', [document.getElementById('username').value, player_selection]);
 }
 function joinRoom(){
 	console.log('joining room');
@@ -236,3 +260,4 @@ setInterval(function(){
 		gameSocket[0].emit('gameState', playerMap);
 	}
 }, threshold);
+

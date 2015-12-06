@@ -34,6 +34,24 @@
   <div class="container" id="div-username">
   		<h1>Pick a username!</h1><br/>
 		<input class="form-control" id="username" type="text" name="username" placeholder="Username" onkeydown="if (event.keyCode == 13) document.getElementById('usernameSubmit').click()"><br><br/>
+		<h1>Choose your player!</h1>
+		<div id="div-player_selection">
+			<div class="player_selection_button">
+				<button id="previousPlayerArrow" onclick="previousPlayer()"><img src="assets/arrow_left.png"></button>
+			</div>
+			<div id="player_1" class="character_box">
+				<img src="assets/red1.png">
+			</div>
+			<div id="player_2" class="character_box">
+				<img src="assets/yellow1.png">
+		    </div>
+		    <div id="player_3" class="character_box">
+				<img src="assets/black1.png">
+		    </div>
+			<div class="player_selection_button">
+			    <button id="nextPlayerArrow" onclick="nextPlayer()"><img src="assets/arrow_right.png"></button>
+			</div>
+		</div>
 	  <div class="buttonDiv">
 		<button id="usernameSubmit" class="btn btn-primary" onclick='newUser()'>Submit</button>
 	  </div>
