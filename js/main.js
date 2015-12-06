@@ -8,11 +8,11 @@ var player_selection;
 $(document).ready(function() {
 	// Hide game room div at the start
 	$("#invalid-username-alert").hide();
-	$("#div-join").hide();
 	$("#div-room").hide();
 	$("#div-lobby").hide();
 	$("#div-game").hide();
 	$("#btn-ready").prop("disabled", false);
+	$("#btn-leave-game").prop("disabled", true);
 
 	/* Player selection */
 	bird_divs = [ $("#player_1"), $("#player_2"), $("#player_3") ];
@@ -46,9 +46,9 @@ function newUser() {
 function joinRoom(){
 	console.log('joining room');
 	socket.emit('join room', document.getElementById('room name').value);
-	$("#div-join").hide();
 	$("#div-lobby").hide();
 	$("#div-room").show();
+	$("#btn-ready").prop("disabled", false);
 }
 function readyUp() {
 	socket.emit('ready for game');
@@ -58,7 +58,7 @@ function readyUp() {
 function leaveRoom(){
 	socket.emit('returned to lobby', myUsername);
 	$("#div-room").hide();
-	$("#div-join").show();
+	$("#div-game").hide();
 	$("#div-lobby").show();
 }
 
@@ -79,7 +79,6 @@ socket.on('username valid', function(username){
 	$("#invalid-username-alert").hide();
 	$("#div-welcome").hide();
 	$("#div-lobby").show();
-	$("#div-join").show();
 	myUsername = username;
 	console.log("username valid: " + username);
 });

@@ -3,7 +3,7 @@
   text-indent: -9999px;
   font-size: 0; }
 
-#invalid-username-alert, #div-join, #div-room, #div-lobby, #div-game {
+#invalid-username-alert, #div-room, #div-lobby, #div-game {
   display: none; }
 
 #div-welcome {
@@ -43,11 +43,11 @@ h1, h2, h3 {
 h1 {
   color: white; }
 
-#div-join h1, #div-room h1 {
+#div-lobby h1, #div-room h1 {
   font-size: 60px;
   padding-bottom: 20px; }
 
-.jumbotron, #div-join {
+.jumbotron, #div-lobby {
   background-color: #db5b50; }
 
 .container {

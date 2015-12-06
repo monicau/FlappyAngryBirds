@@ -113,10 +113,10 @@ var mainState = {
 
 		// set up scoreboard
 		this.scoreboard = this.game.add.sprite(25, 25, 'scoreboard');
+		this.scoreboard.visible = false;
 		this.scoreboard.anchor.set(0.5);
 		this.scoreboard.x = Math.floor(gameWidth/2);
 		this.scoreboard.y = Math.floor(gameHeight/2);
-		this.scoreboard.visible = false;
 
 		this.highScore= game.add.text(40,20,"", {font: "30px Bangers", fill:"#333333", align: "center"});
 		this.highScore.anchor.set(0.5);
@@ -201,8 +201,11 @@ var mainState = {
 			if(!this.restartButton) {
 				$('#btn-restart-game').prop('disabled', false);
 				this.restartButton = true;
-			}
 
+			}
+			// Let player leave room
+			$("#btn-leave-game").prop("disabled", false);
+			
 			// Display high score
 			updateHighScore(this.myID, this.score);
 			this.scoreboard.visible = true;

@@ -62,7 +62,7 @@
 	  <span class="sr-only">Error:</span>
 	  Username invalid: already taken or empty. Please try again.
   </div>
-  	<div class="container" id="div-join">
+  	<div class="container" id="div-lobby">
   		<h1>Lobby</h1>
 		<div class="row">
 			<div class="col-sm-6 col-md-6">
@@ -124,6 +124,8 @@
 	</div>
   <div id="div-game">
 	  <button id="btn-restart-game" class="btn btn-success" onclick="restartGame()">Restart</button>
+		<button id="btn-leave-game" class="btn btn-danger" onclick='leaveRoom()'>Leave room</button>
+
 	  <div id="game"></div>
 	  <script>
 	  		$('#btn-restart-game').prop('disabled', true);
