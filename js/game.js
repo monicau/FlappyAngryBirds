@@ -299,8 +299,8 @@ var mainState = {
 		if(this.pipes){
 			// Add 6 pipes
 			for (var i=0; i<10; i++) {
-				if (i != hole && i != hole + 1 && i != hole + 2) {
-					this.addOnePipe(790, i*60+10);
+				if (i != hole && i != hole + 1 && i != hole + 2  && i != hole + 3) {
+					this.addOnePipe(790, i*60+15);
 				}
 			}
 		}
@@ -308,7 +308,6 @@ var mainState = {
 
 	addRowOfPipes: function() {
 		if(this.isBoss && this.hasStarted){
-			console.log("Making pipe");
 			// random should only be performed on the master 
 			// Create a gap to fly through
 			var hole = Math.floor(Math.random() * 5) + 1;

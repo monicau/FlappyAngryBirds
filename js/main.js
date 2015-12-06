@@ -187,16 +187,13 @@ socket.on('gamePort', function(portNum) {
 	});
 
 	socketGame.on('high score', function(message) {
-		console.log("received high score from server:" + message);
-		console.log(JSON.stringify(message));
 		for (var i=0; i<message.length; i++) {
-			console.log(message[i].username + " vs me: " + mainState.myID);
 			if (message[i].score == mainState.score && message[i].username == mainState.myID) {
 				mainState.highScore.text += "*** ";
 				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score;
-				mainState.highScore.text += " ***";
+				mainState.highScore.text += " *** ";
 			} else {
-				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score;
+				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score + " ";
 			}
 			mainState.highScore.text += "\n";
 		}
