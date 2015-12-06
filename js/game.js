@@ -45,8 +45,8 @@ var mainState = {
 				this.birds[id] = this.game.add.sprite(100, 245, 'black_bird');
 			}
 			var style = {font:"30px Bangers", fill:"#ffffff"};
-			var truncatedId = id.substring(0,5) + " "; // truncate to 5 chars in case it's too long. add a space to avoid clipping issues
-			this.label_score = this.game.add.text(60, -80, truncatedId, style);
+			var truncatedId = id.substring(0,6) + " "; // truncate to 6 chars in case it's too long. add a space to avoid clipping issues
+			this.label_score = this.game.add.text(50, -80, truncatedId, style);
 			this.birds[id].addChild(this.label_score);
 
 			var flap = this.birds[id].animations.add('flap');
