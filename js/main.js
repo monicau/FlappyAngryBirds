@@ -37,7 +37,11 @@ function previousPlayer() {
 }
 
 function newUser() {
-	socket.emit('new user', [document.getElementById('username').value, player_selection]);
+	var message = {};
+	message.username = document.getElementById('username').value;
+	message.player_selection = player_selection;
+
+	socket.emit('new user', message);
 }
 function joinRoom(){
 	console.log('joining room');

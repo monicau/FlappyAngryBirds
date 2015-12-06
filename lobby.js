@@ -53,22 +53,22 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		delete socket_usernames[socket.id];
 	});
 
-	socket.on('new user', function(username) {
-		if(!username || usernameTaken(username)){
+	socket.on('new user', function(message) {
+		if(!message.username || usernameTaken(message.username)){
 			socket.emit("username invalid");
 		}
 		else{
-			socket.emit('username valid', username);
+			socket.emit('username valid', message.username);
 			// Join lobby
-			lobby_members.push(username);
+			lobby_members.push(message.username);
 			socket.join('lobby');
 			socket.current_room = 'lobby';
-			io.to('lobby').emit('new lobby member', username); // tell others about it
+			io.to('lobby').emit('new lobby member', message.username); // tell others about it
 
 			// If they aren't currently in socket_usernames, add them, and notify the lobby members
-			if(!(socket.id in socket_usernames && socket_usernames[socket.id] === username)){
-				socket_usernames[socket.id] = username;
-				console.log("New user: username " + username + " with socket " + socket.id);
+			if(!(socket.id in socket_usernames && socket_usernames[socket.id] === message.username)){
+				socket_usernames[socket.id] = message.username;
+				console.log("New user: username " + message.username + " with socket " + socket.id);
 				io.to('lobby').emit('lobby members', lobby_members)
 			}
 			console.log("Lobby members:" + JSON.stringify(socket_usernames));
