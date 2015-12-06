@@ -35,8 +35,15 @@ var mainState = {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
 		// Display bird
-		for(id in this.birds){
-			this.birds[id] = this.game.add.sprite(100, 245, 'red_bird');
+		var index = 0;
+		for(id in this.birds) {
+			if (this.birdType[index] == 0 ) {
+				this.birds[id] = this.game.add.sprite(100, 245, 'red_bird');
+			} else if (this.birdType[index] == 1 ) {
+				this.birds[id] = this.game.add.sprite(100, 245, 'yellow_bird');
+			} else {
+				this.birds[id] = this.game.add.sprite(100, 245, 'black_bird');
+			}
 			var flap = this.birds[id].animations.add('flap');
 			this.birds[id].animations.play('flap', 5, true);
 			// this.birds[id].tint = this.playerColours[id];
@@ -63,6 +70,7 @@ var mainState = {
 			if(this.myID == id){
 				this.bird = this.birds[id];
 			}
+			index += 1;
 		}		
 
 		// Key binding for jumping and dancing

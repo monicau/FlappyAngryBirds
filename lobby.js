@@ -28,6 +28,7 @@ var lobby_members = [];
 var gamerooms = []; // list of created rooms
 var ready_members_per_room = {}; //key: room name, value: list of ready players
 var socket_usernames = {}; //key: socket ID, value: username
+var username_to_bird = {}; //key: username, value: bird type (0, 1 or 2)
 
 io.on('connection', function (socket){ // socket is the newly connected socket
 	socket.on('disconnect', function(){
@@ -68,6 +69,7 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 			// If they aren't currently in socket_usernames, add them, and notify the lobby members
 			if(!(socket.id in socket_usernames && socket_usernames[socket.id] === message.username)){
 				socket_usernames[socket.id] = message.username;
+				username_to_bird[message.username] = message.player_selection;
 				console.log("New user: username " + message.username + " with socket " + socket.id);
 				io.to('lobby').emit('lobby members', lobby_members)
 			}
@@ -154,26 +156,31 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		// If everyone is ready, start the game
 		if(ready_members_per_room[socket.current_room].length == members_of_room.length){
 			console.log("Everyone ready, starting game server.");
-			var p = launchGameServer(members_of_room);
-
+			// Create a list of chosen birds for each member of this room
+			var birds_in_room = [];
+			// console.log("Binding user to bird type...");
+			for (var i=0; i<members_of_room.length; i++) {
+				// console.log("user: " + members_of_room[i] + ", bird:" + username_to_bird[members_of_room[i]]);
+				birds_in_room.push(username_to_bird[members_of_room[i]]);
+			}
+			var p = launchGameServer(members_of_room, birds_in_room);
 		}
 	});
-	function launchGameServer(members_of_room) {
+	function launchGameServer(members_of_room, birds_in_room) {
 		var p = child_process.fork(__dirname + '/gameserver');
 		var portNum = Math.round(Math.random() * (10000) + 50000); // generate a random port between 50000 to 60000
-		p.send([portNum, members_of_room]);
+		p.send([portNum, members_of_room, birds_in_room]);
 		console.log("Emitting game port ");
 		io.sockets.in(socket.current_room).emit('gamePort', portNum);
 		p.on('message', function(message) {
 			console.log("CHILD SAID: " + message);
 			if (message.indexOf('restart') > -1) {
 				// Launch a new game server for the new game
-				return launchGameServer(members_of_room);
+				return launchGameServer(members_of_room, birds_in_room);
 			}
 		});
 		return p;
 	}
-	// console.log('There are '+Object.keys(io.nsps['/'].adapter.rooms['lobby']).length+' people connected')
 });
 
 function removeMemberFromLobby(socket){
