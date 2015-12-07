@@ -40,10 +40,15 @@ function addHighScore(pUsername, pScore) {
 		username: pUsername,
 		score: pScore
 	};
-	var query = connection.query('insert into scoreboard (username, score) values (\'' + pUsername + '\', ' + pScore + ') ', function(err, result) {
+	connection.query('select * from scoreboard where username = \''+ pUsername +'\' and score='+pScore, function(err, rows, fields) {
 		if (err) throw (err);
+		if (rows.length==0) {
+			var query = connection.query('insert into scoreboard (username, score) values (\'' + pUsername + '\', ' + pScore + ') ', function(err, result) {
+				if (err) throw (err);
+			});
+		}
 	});
-	process.send(query.sql);
+	
 }
 
 process.on('message', function(message) {
