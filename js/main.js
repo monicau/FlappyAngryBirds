@@ -223,13 +223,17 @@ socket.on('gamePort', function(portNum) {
 		mainState.labelScore.text = score;
 	});
 
-	socketGame.on('high score', function(message) {
+	socketGame.on('high score', function(listMessages) {
+		var message= listMessages[0];
+		var lastHighScore = listMessages[1];
+		var highlightScore = false;
 		mainState.highScore.text = "SCOREBOARD \n\n";
 		for (var i=0; i<message.length; i++) {
-			if (message[i].score == mainState.score && message[i].username == mainState.myID) {
+			if (message[i].score == lastHighScore.score && message[i].username == lastHighScore.user && !highlightScore) {
 				mainState.highScore.text += "*** ";
 				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score;
 				mainState.highScore.text += " *** ";
+				highlightScore = true;
 			} else {
 				mainState.highScore.text += message[i].username + " . . . . . . . . . " + message[i].score + " ";
 			}

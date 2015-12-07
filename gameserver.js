@@ -20,6 +20,8 @@ var bossUsername;
 var bossSocket;
 var count = 0;
 var restart_requests = new Set();
+var lastHighScore = {};
+
 var possibleColors = {
 	'light green': 0xB2F2ED,
 	'orange': 0xEDB227,
@@ -116,11 +118,13 @@ io.on('connection', function(socket) {
 
 	socket.on('get highscore', function(message) {
 		getHighScores(function(result) {
-			io.to('game').emit("high score", result);
+			io.to('game').emit("high score", [result, lastHighScore]);
 		});
 	});
 	socket.on('submit highscore', function(message) {
 		addHighScore(message[0], message[1]);
+		lastHighScore.user = message[0];
+		lastHighScore.score = message[1];
 	});
 });
 
