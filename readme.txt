@@ -26,7 +26,7 @@ CREATE TABLE scoreboard (
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 username VARCHAR(50) not null,
 score INT(10) NOT NULL
-)
+);
 
 Change the mysql connection information in js/gameserver.js on line 10 to 13.
 

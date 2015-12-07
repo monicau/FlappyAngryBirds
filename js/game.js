@@ -168,8 +168,6 @@ var mainState = {
 			if (this.birds[bird].inWorld == false) this.crippleOtherBird(bird);
 		}
 
-		
-
 		if (this.isBoss) {
 			// Do collision detection
 			if(!DEBUG) {
