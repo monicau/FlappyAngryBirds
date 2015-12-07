@@ -1,8 +1,8 @@
 Team members
 ------------
-Rudolf Lam
-Emil Rose
-Monica Ung
+Rudolf Lam (260427082)
+Emil Rose (260515401)
+Monica Ung (260430128)
 
 
 View existing game
