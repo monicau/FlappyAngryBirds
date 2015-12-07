@@ -146,8 +146,7 @@ socket.on('members ready in room', function(readyMembers) {
 
 socket.on('lobby member disconnected', function(disconnectedID){
 	console.log('DISCONNECTED FROM LOBBY');
-	$('#lobby-messages').append($('<li>').text(disconnectedID + " left the lobby"));
-
+	$('#lobby-messages').append($('<li><center><em>' + disconnectedID + ' left the lobby</em></center></li>'));
 });
 
 socket.on('room member disconnected', function(disconnectedID){
