@@ -14,7 +14,7 @@ var mainState = {
 		
 		// Load game assets
 		game.load.image('bird', 'assets/bird.png');
-		game.load.image('pipe', 'assets/pipe.png');
+		game.load.image('pipe', 'assets/pipe3.png');
 		game.load.image('scoreboard', 'assets/scoreboard.png');
 		game.load.spritesheet('red_bird', 'assets/spritesheet_red.png', 119, 96, 3);
 		game.load.spritesheet('yellow_bird', 'assets/spritesheet_yellow.png', 127, 100, 3);
@@ -46,7 +46,7 @@ var mainState = {
 			}
 			var style = {font:"30px Bangers", fill:"#ffffff"};
 			var truncatedId = id.substring(0,6) + " "; // truncate to 6 chars in case it's too long. add a space to avoid clipping issues
-			this.label_score = this.game.add.text(50, -80, truncatedId, style);
+			this.label_score = this.game.add.text(60, -80, truncatedId, style);
 			this.birds[id].addChild(this.label_score);
 
 			var flap = this.birds[id].animations.add('flap');
