@@ -30,6 +30,7 @@ var mainState = {
 		this.gameOver = false;
 		this.hasStarted = false;
 		var count = 1;
+		this.aliveBirds = [];
 
 		// Set up the physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -37,6 +38,8 @@ var mainState = {
 		// Display bird
 		var index = 0;
 		for(id in this.birds) {
+			this.aliveBirds.push(id);
+
 			if (this.birdType[index] == 0 ) {
 				this.birds[id] = this.game.add.sprite(20, 245, 'red_bird');
 			} else if (this.birdType[index] == 1 ) {
@@ -156,15 +159,16 @@ var mainState = {
 			return;
 		}
 
-		// Rotate bird over time
 		for (var bird in this.birds) {
+			// Rotate bird over time
 			if (this.birds[bird].angle < 20) {
 				this.birds[bird].angle += 1;
 			}
+			// Check if bird fell out of world
+			if (this.birds[bird].inWorld == false) this.crippleOtherBird(bird);
 		}
 
-		// Restart game if bird falls out of the screen
-		if (this.bird.inWorld == false) this.crippleBird();
+		
 
 		if (this.isBoss) {
 			// Do collision detection
@@ -174,7 +178,7 @@ var mainState = {
 					game.physics.arcade.overlap(bird, this.pipes, this.hitPipe(bird), null, this);
 					for (var idOther in this.birds) {
 						if (id != idOther) {
-							console.log("COLLISION!!");
+							// console.log("COLLISION!!");
 							game.physics.arcade.overlap(this.birds[id], this.birds[idOther], this.hitBird(this.birds[idOther]), null, this);
 						}
 					}
@@ -208,7 +212,9 @@ var mainState = {
 			$("#btn-leave-game").prop("disabled", false);
 
 			// Display high score
-			updateHighScore(this.myID, this.score);
+			if (this.aliveBirds.length == 1 && this.isBoss) {
+				updateHighScore(this.aliveBirds[0], this.score);
+			}
 			this.scoreboard.visible = true;
 			this.highScore.visible = true;
 		}
@@ -219,6 +225,21 @@ var mainState = {
 			this.death.play();
 		}
 		this.bird.alive = false;
+		if (this.aliveBirds.length>1) {
+			var index = this.aliveBirds.indexOf(this.bird);
+			this.aliveBirds.splice(index, 1);
+		}
+	},
+
+	crippleOtherBird: function(otherBird) {
+		if(this.birds[otherBird].alive){ // this check is necessary so that the sound doesn't play many times, which is incredibly painful. do not make my mistakes.
+			this.death.play();
+		}
+		this.birds[otherBird].alive = false;
+		if (this.aliveBirds.length>1) {
+			var index = this.aliveBirds.indexOf(otherBird);
+			this.aliveBirds.splice(index, 1);
+		}
 	},
 
 	jump: function() {

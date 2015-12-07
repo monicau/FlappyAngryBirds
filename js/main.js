@@ -1,6 +1,6 @@
 var MAX_LENGTH_OF_LOG = 10;
 var LOCALHOST = 'localhost:';
-var OTHERIP = '159.203.5.238:';
+var OTHERIP = '142.157.151.55:';
 
 var bird_divs;
 var player_selection;
