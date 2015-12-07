@@ -107,6 +107,9 @@ ul {
   padding: 0;
   color: white; }
 
+ul#lobby-messages {
+  text-align: left; }
+
 @media only screen and (min-width: 980px) {
   #div-welcome h1 {
     font-size: 70px; }

@@ -94,7 +94,7 @@ socket.on('new lobby member', function(username){
 	if($("#lobby-messages li").length >= MAX_LENGTH_OF_LOG){
 		messages.children()[0].remove();
 	}
-	messages.append($('<li>').text(username + ' entered the lobby'));
+	messages.append($('<li><center><em>' + username + ' entered the lobby</em></center></li>'));
 });
 
 socket.on('new room member', function(username) {
@@ -123,7 +123,7 @@ socket.on('lobby members', function(members){
 });
 
 socket.on('new lobby chat message', function(message) {
-	$('#lobby-messages').append($('<li>').text(message.user + " said: " + message.chatmessage));
+	$('#lobby-messages').append($("<li><b>" + message.user + ":</b> " + message.chatmessage + "</li>"));
 	$("#lobby_chatbox").animate({ scrollTop: $("#lobby_chatbox")[0].scrollHeight}, 1000);
 });
 
