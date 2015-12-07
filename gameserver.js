@@ -35,20 +35,15 @@ function getHighScores(callback) {
 		callback(rows);	
 	});
 }
+
 function addHighScore(pUsername, pScore) {
 	var post = {
 		username: pUsername,
 		score: pScore
 	};
-	connection.query('select * from scoreboard where username = \''+ pUsername +'\' and score='+pScore, function(err, rows, fields) {
+	var query = connection.query('insert into scoreboard (username, score) values (\'' + pUsername + '\', ' + pScore + ') ', function(err, result) {
 		if (err) throw (err);
-		if (rows.length==0) {
-			var query = connection.query('insert into scoreboard (username, score) values (\'' + pUsername + '\', ' + pScore + ') ', function(err, result) {
-				if (err) throw (err);
-			});
-		}
 	});
-	
 }
 
 process.on('message', function(message) {
