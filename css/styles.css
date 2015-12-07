@@ -59,7 +59,7 @@ h1 {
   border-radius: 0; }
 
 hr {
-  border: 5px solid #53b9d5; }
+  border: 5px solid #53B9D5; }
 
 #invalid-username-alert {
   background-color: #db5b50; }
@@ -167,3 +167,8 @@ div + .container {
   background: none;
   border: 0;
   padding: 0 20px; }
+
+#btn-leave-game {
+  color: #5e9732; }
+
+/*# sourceMappingURL=styles.css.map */
