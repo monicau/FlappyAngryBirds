@@ -267,7 +267,7 @@ var mainState = {
 	},
 
 	otherBirdJump: function(id){
-		if (this.birds[id].alive == false) {
+		if (this.birds[id].alive == false || !this.hasStarted) {
 			return;
 		}
 
@@ -285,14 +285,14 @@ var mainState = {
 	},
 
 	otherBirdLeft: function(id){
-		if (this.birds[id].alive == false) {
+		if (this.birds[id].alive == false || !this.hasStarted) {
 			return;
 		}
 		this.birds[id].x -= 50;
 	},
 
 	otherBirdRight: function(id){
-		if (this.birds[id].alive == false) {
+		if (this.birds[id].alive == false || !this.hasStarted) {
 			return;
 		}
 		this.birds[id].x += 50;
