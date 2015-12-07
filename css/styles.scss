@@ -83,6 +83,11 @@ h1 {
   border-radius: 0;
 }
 
+.chatbox {
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
 hr {
   border: 5px solid $palercyan;
 }

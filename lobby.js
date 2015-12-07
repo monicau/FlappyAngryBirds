@@ -107,6 +107,14 @@ io.on('connection', function (socket){ // socket is the newly connected socket
 		console.log("Lobby members:" + JSON.stringify(socket_usernames));
 	});
 
+	socket.on('lobby chat message', function(msg) {
+		var message = {};
+		message.user = socket_usernames[socket.id];
+		message.chatmessage = msg;
+		// console.log("Received chat. Packing it: " + JSON.stringify(message));
+		io.to('lobby').emit('new lobby chat message', message);
+	});
+
 	socket.on('join room', function(newRoom){
 		// if gameroom doesn't already exist, create it
 		if(gamerooms.indexOf(newRoom) == -1){

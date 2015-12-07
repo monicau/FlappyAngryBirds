@@ -50,6 +50,11 @@ function joinRoom(){
 	$("#div-room").show();
 	$("#btn-ready").prop("disabled", false);
 }
+function lobbyChat() {
+	socket.emit('lobby chat message', document.getElementById('lobby_chat').value);
+	// Clear message from input field
+	$("#lobby_chat").val("");
+}
 function readyUp() {
 	socket.emit('ready for game');
 	$("#btn-ready").prop("disabled", true);
@@ -115,6 +120,11 @@ socket.on('lobby members', function(members){
 	for (var i = 0 ; i < members.length; i++ ) {
 		$('#lobby-members').append($('<li>').text(members[i]));
 	}
+});
+
+socket.on('new lobby chat message', function(message) {
+	$('#lobby-messages').append($('<li>').text(message.user + " said: " + message.chatmessage));
+	$("#lobby_chatbox").animate({ scrollTop: $("#lobby_chatbox")[0].scrollHeight}, 1000);
 });
 
 socket.on('gamerooms', function(rooms){

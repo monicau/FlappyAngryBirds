@@ -70,8 +70,8 @@
 					<h3>Online members</h3>
 					<ul id="lobby-members"></ul>
 				</div>
-				<div class="well">
-					<h3>Log</h3>
+				<div class="well chatbox" id="lobby_chatbox">
+					<h3>Chat</h3>
 					<ul id="lobby-messages"></ul>
 				</div>
 			</div>
@@ -88,6 +88,8 @@
 				</div>
 			</div>
 		</div>
+		<input class="form-control" id="lobby_chat" type="text" name="lobby_chat" placeholder="Enter chat message here" onkeydown="if (event.keyCode == 13) document.getElementById('lobbyChat').click()">
+			<button id="lobbyChat" class="btn btn-primary" onclick='lobbyChat()'>Enter</button>
 	</div>
 
 	<div class="container" id="div-room">

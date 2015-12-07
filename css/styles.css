@@ -58,8 +58,12 @@ h1 {
   border: 5px solid #31302c;
   border-radius: 0; }
 
+.chatbox {
+  max-height: 250px;
+  overflow-y: scroll; }
+
 hr {
-  border: 5px solid #53B9D5; }
+  border: 5px solid #53b9d5; }
 
 #invalid-username-alert {
   background-color: #db5b50; }
@@ -170,5 +174,3 @@ div + .container {
 
 #btn-leave-game {
   color: #5e9732; }
-
-/*# sourceMappingURL=styles.css.map */
