@@ -1,14 +1,17 @@
 Team members
 ------------
-Rudolf Lam
-Emil Rose
-Monica Ung
+Rudolf Lam (260427082)
+Emil Rose (260515401)
+Monica Ung (260430128)
 
 
 View existing game
 ------------------
-http://159.203.5.238:8080
+http://YOURIP:8080
 
+Main HMTL file
+------------------
+index.html in /html
 
 Website setup
 --------------
