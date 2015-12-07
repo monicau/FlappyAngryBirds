@@ -38,11 +38,11 @@ var mainState = {
 		var index = 0;
 		for(id in this.birds) {
 			if (this.birdType[index] == 0 ) {
-				this.birds[id] = this.game.add.sprite(100, 245, 'red_bird');
+				this.birds[id] = this.game.add.sprite(20, 245, 'red_bird');
 			} else if (this.birdType[index] == 1 ) {
-				this.birds[id] = this.game.add.sprite(100, 245, 'yellow_bird');
+				this.birds[id] = this.game.add.sprite(20, 245, 'yellow_bird');
 			} else {
-				this.birds[id] = this.game.add.sprite(100, 245, 'black_bird');
+				this.birds[id] = this.game.add.sprite(20, 245, 'black_bird');
 			}
 			var style = {font:"30px Bangers", fill:"#ffffff"};
 			var truncatedId = id.substring(0,6) + " "; // truncate to 6 chars in case it's too long. add a space to avoid clipping issues
@@ -65,7 +65,7 @@ var mainState = {
 
 			// Set start position
 			this.birds[id].x += count;
-			count += 100;
+			count += 140;
 
 			// Set anchor so that its animation rotates how we want
 			this.birds[id].anchor.setTo(-0.2, 0.5);	
@@ -174,6 +174,7 @@ var mainState = {
 					game.physics.arcade.overlap(bird, this.pipes, this.hitPipe(bird), null, this);
 					for (var idOther in this.birds) {
 						if (id != idOther) {
+							console.log("COLLISION!!");
 							game.physics.arcade.overlap(this.birds[id], this.birds[idOther], this.hitBird(this.birds[idOther]), null, this);
 						}
 					}
@@ -205,7 +206,7 @@ var mainState = {
 			}
 			// Let player leave room
 			$("#btn-leave-game").prop("disabled", false);
-			
+
 			// Display high score
 			updateHighScore(this.myID, this.score);
 			this.scoreboard.visible = true;
