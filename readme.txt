@@ -7,7 +7,8 @@ Monica Ung (260430128)
 
 View existing game
 ------------------
-http://YOURIP:8080
+Your own setup: http://YOURIP:8080
+View online working example: http://159.203.5.238:8080/
 
 Main HMTL file
 ------------------
@@ -39,4 +40,4 @@ Find the IP of the machine that you will use as the server.  Set the variable ca
 Running the server:
 In the main directory of the project, use the command: node lobby.js
 
-Access the website with: YOUR_IP:8080
+Access the website with: http://YOUR_IP:8080
