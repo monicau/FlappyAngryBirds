@@ -215,7 +215,7 @@ socket.on('gamePort', function(portNum) {
 	});
 
 	socketGame.on('high score', function(message) {
-		mainState.highScore.text = "SCOREBOARD \n";
+		mainState.highScore.text = "SCOREBOARD \n\n";
 		for (var i=0; i<message.length; i++) {
 			if (message[i].score == mainState.score && message[i].username == mainState.myID) {
 				mainState.highScore.text += "*** ";
